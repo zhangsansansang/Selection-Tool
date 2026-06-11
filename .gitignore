@@ -1,0 +1,18 @@
+# Python build scripts
+*.py
+
+# Source data files
+*.pdf
+*.xlsx
+*.rar
+*.txt
+
+# Temp/build files
+rebuild_output*
+product_db_lines*
+comp_db_lines*
+
+# IDE
+.claude/
+.vscode/
+.idea/

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.5,user-scalable=yes">
+  <title>海康机器人 · 3D轮廓仪选型 | V1.0</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#f0f2f5;font-family:'Nunito','Segoe UI','Poppins',system-ui,sans-serif;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:1.2rem;color:#1a2632}
+    .app-window{max-width:1200px;width:100%;background:#fff;border-radius:40px;box-shadow:0 12px 24px rgba(0,0,0,0.05);display:flex;flex-direction:column;overflow:hidden;animation:fadeIn .3s ease-out}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .titlebar{background:#fff;padding:.8rem 1.8rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eef2f6}
+    .logo-area h1{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#1f2c38,#f76504);-webkit-background-clip:text;background-clip:text;color:transparent;display:flex;align-items:center;gap:.5rem}
+    .badge{background:#f2f5f8;color:#f76504;padding:.2rem .9rem;border-radius:40px;font-size:.65rem;font-weight:700}
+    .status-badge{font-size:.7rem;background:#f0f4f8;padding:.25rem .8rem;border-radius:40px;color:#5d6f7e}
+    .main-content{display:flex;gap:1.8rem;padding:1.5rem 1.8rem}
+    .left-panel{width:42%;flex-shrink:0;display:flex;flex-direction:column;gap:1.2rem}
+    .right-panel{width:58%;display:flex;flex-direction:column}
+    .card{background:#fff;border-radius:28px;padding:1.2rem 1.4rem;border:1px solid #eef2f6;transition:transform .2s ease,box-shadow .2s ease}
+    .card:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,0.04)}
+    .card-header{font-weight:800;font-size:1rem;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;color:#1f2c38;border-left:4px solid #f76504;padding-left:.7rem}
+    .compact-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+    label{font-weight:700;font-size:.65rem;color:#5d6f7e;display:block;margin-bottom:.25rem;text-transform:uppercase}
+    select,input{background:#fcfdfe;border:1.5px solid #e2e8f0;border-radius:20px;padding:.55rem .8rem;font-size:.8rem;width:100%;transition:border-color .15s,box-shadow .15s;outline:none;font-family:inherit;color:#1f2c38}
+    input::placeholder{font-size:.7rem;color:#a0b0c0;font-weight:400}
+    select:focus,input:focus{border-color:#f76504;box-shadow:0 0 0 2px rgba(247,101,4,0.1)}
+    .btn-primary{background:linear-gradient(105deg,#f76504,#e05a00);color:#fff;border:none;padding:.75rem 1rem;border-radius:40px;font-weight:800;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;margin-top:.5rem;transition:transform .15s,box-shadow .15s;box-shadow:0 3px 8px rgba(247,101,4,0.2)}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 12px rgba(247,101,4,0.25)}
+    .btn-outline{background:transparent;border:1.5px solid #f76504;color:#f76504;padding:.5rem 1rem;border-radius:40px;font-weight:700;font-size:.75rem;cursor:pointer;transition:background .15s;width:100%;margin-top:.6rem}
+    .btn-outline:hover{background:#fef3e8}
+    .empty-state{color:#8f9eae;text-align:center;padding:1.5rem;font-size:.85rem}
+    .tag{background:#f2f5f8;padding:.2rem .7rem;border-radius:40px;font-size:.6rem;font-weight:700;color:#f76504;display:inline-block}
+    .tag.green{background:#e8f5e9;color:#2e7d32}
+    .tag.blue{background:#e3f2fd;color:#1565c0}
+    .tag.purple{background:#f3e5f5;color:#7b1fa2}
+    .tag.orange{background:#fff3e0;color:#e65100}
+    .tag.series{background:#f2f5f8;color:#f76504;padding:.25rem .8rem;border-radius:40px;font-size:.7rem;font-weight:800;display:inline-block}.tag.series.purple{background:#f3e5f5;color:#7b1fa2}.tag.series.speed{background:#ffebee;color:#c62828}
+    .rec-card{display:flex;gap:.8rem;padding:.7rem;border-radius:20px;margin-bottom:.5rem;border:1px solid #eef2f6;background:#fcfdfe;align-items:center;flex-wrap:wrap}
+    .rec-card.top{border:2px solid #f76504;background:#fffbf5}
+    .rec-card .rank{font-size:1.5rem;font-weight:800;color:#f76504;min-width:30px;text-align:center}
+    .rec-card .info{flex:1;min-width:180px}
+    .rec-card .info .name{font-size:.85rem;font-weight:800;color:#1f2c38}
+    .rec-card .info .specs{font-size:.65rem;color:#5d6f7e;margin-top:.2rem}
+    .comp-compare-box{background:#f9fdf9;border:1px solid #4caf50;border-radius:20px;padding:.8rem 1rem;margin-bottom:.6rem}
+    .comp-compare-box .vs-row{display:flex;gap:1rem;align-items:stretch;flex-wrap:wrap}
+    .comp-compare-box .vs-col{flex:1;min-width:180px;padding:.5rem}
+    .comp-compare-box .vs-col.left{background:#fff;border-radius:16px;border:1px solid #e0e0e0}
+    .comp-compare-box .vs-col.right{background:#fffbf5;border-radius:16px;border:2px solid #f76504}
+    .comp-compare-box .vs-label{font-size:.6rem;font-weight:700;color:#8f9eae;margin-bottom:.3rem}
+    .comp-compare-box .vs-model{font-size:.8rem;font-weight:800;color:#1f2c38}
+    .comp-compare-box .vs-hik-model{font-size:1rem;font-weight:800;color:#f76504}
+    .comp-compare-box .vs-specs{font-size:.6rem;color:#5d6f7e;margin-top:.2rem;line-height:1.7}
+    .comp-compare-box .vs-divider{display:flex;align-items:center;font-size:1.5rem;font-weight:800;color:#4caf50}
+    .stitch-info{background:#e3f2fd;border:1px solid #2196f3;border-radius:12px;padding:.4rem .6rem;margin-top:.3rem;font-size:.65rem;color:#1565c0}
+    .warning-badge{background:#fff3e0;color:#f76504;padding:.5rem 1rem;border-radius:40px;font-size:.75rem;font-weight:600;text-align:center}
+    .model-list{max-height:60vh;overflow-y:auto;padding-right:.3rem}
+    .model-list::-webkit-scrollbar{width:0}
+    .model-list{scrollbar-width:none}
+    .result-header{font-size:.7rem;color:#5d6f7e;margin-bottom:.6rem;line-height:1.5}
+    .contact-bar{text-align:center;font-size:.65rem;color:#5d6f7e;margin-top:.6rem;padding:.4rem;background:#fafcfd;border-radius:12px;border:1px dashed #eef2f6}
+    @media(max-width:800px){
+      .main-content{flex-direction:column}
+      .left-panel,.right-panel{width:100%}
+      .compact-grid{grid-template-columns:1fr;gap:.8rem}
+      .comp-compare-box .vs-row{flex-direction:column}
+      .comp-compare-box .vs-divider{transform:rotate(90deg)}
+    }
+  </style>
+</head>
+<body>
+<div class="app-window">
+  <div class="titlebar">
+    <div class="logo-area"><h1>📐 Hikrobot 3D轮廓仪选型 <span class="badge">V1.0</span></h1></div>
+    <div class="status-badge">✨ 计算选型仅供参考，建议选型后实测</div>
+  </div>
+  <div class="main-content">
+    <div class="left-panel">
+      <div class="card">
+        <div class="card-header">📋 参数选型</div>
+        <div class="compact-grid">
+          <div><label>重复性精度需求 (mm)</label><input type="number" id="reqRepeatability" value="" placeholder="如 0.005" step="0.001"></div>
+          <div><label>产品短边尺寸 (mm)</label><input type="number" id="productSize" value="" placeholder="如 50" step="0.1"></div>
+          <div><label>Z轴景深需求 (mm，选填)</label><input type="number" id="reqZRange" value="" placeholder="如 10" step="0.1"></div>
+        </div>
+        <button class="btn-primary" id="runBtn">⚡ 开始智能选型</button>
+      </div>
+      <div class="card">
+        <div class="card-header">🔄 竞品对标（选填）</div>
+        <div class="compact-grid">
+          <div><label>友商品牌</label><select id="competitorBrand"><option value="">-- 不限 --</option><option value="Keyence">基恩士 Keyence</option><option value="LMI">LMI Gocator</option><option value="SSZN">深视智能 SSZN</option><option value="翌视">翌视</option><option value="Photon">光子 Photon</option><option value="Sick">西克 Sick</option><option value="Huaray">华睿 Huaray</option><option value="Meca">梅卡 Meca</option></select></div>
+          <div><label>友商型号</label><input type="text" id="competitorModel" value="" placeholder="如 LJ-X8080"></div>
+        </div>
+        <button class="btn-outline" id="compOnlyBtn">🔍 竞品对标查询</button>
+        <div class="contact-bar">📞 详细需求联系海康技术支持</div>
+      </div>
+    </div>
+    <div class="right-panel" id="rightPanel">
+      <div class="card"><div class="card-header">🏆 选型结果</div><div id="resultArea" class="empty-state">等待输入参数或竞品对标查询...</div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const PRODUCT_DB=[    { model:"MV-DP2020-01P V2.0", series:"DP2000", points:3200, cd:21.4, xNear:14, xRef:14.3, xFar:14.6, zRange:6.8, zRes:"0.71~0.78", zRepeat:1.4, zRepeatMax:3.9, zRepeatDisplay:"1.4~3.9", maxFreq:23.9, light:"405nm蓝光", sz:"A" },
+    { model:"MV-DP2023-01P V2.0", series:"DP2000", points:3200, cd:23.3, xNear:14.5, xRef:16, xFar:17.5, zRange:7.8, zRes:"0.56~0.82", zRepeat:1.1, zRepeatMax:4.1, zRepeatDisplay:"1.1~4.1", maxFreq:23.9, light:"405nm蓝光", sz:"B" },
+    { model:"MV-DP2050-01P V2.0", series:"DP2000", points:3200, cd:47, xNear:30.5, xRef:31.5, xFar:32.5, zRange:6, zRes:"1.58~1.74", zRepeat:3.2, zRepeatMax:8.7, zRepeatDisplay:"3.2~8.7", maxFreq:23.9, light:"405nm蓝光", sz:"C" },
+    { model:"MV-DP2060-01P V2.0", series:"DP2000", points:3200, cd:64, xNear:27, xRef:31.5, xFar:36, zRange:26, zRes:"1.45~2.83", zRepeat:2.9, zRepeatMax:14.2, zRepeatDisplay:"2.9~14.2", maxFreq:23.9, light:"405nm蓝光", sz:"D" },
+    { model:"MV-DP2060-03P V2.0", series:"DP2000", points:3200, cd:64, xNear:27, xRef:31.5, xFar:36, zRange:26, zRes:"1.45~2.83", zRepeat:2.9, zRepeatMax:14.2, zRepeatDisplay:"2.9~14.2", maxFreq:23.9, light:"650nm红光", sz:"D" },
+    { model:"MV-DP2061-01P V2.0", series:"DP2000", points:3200, cd:60.2, xNear:44.4, xRef:46.6, xFar:48.8, zRange:10.4, zRes:"2.71~3.26", zRepeat:5.4, zRepeatMax:16.3, zRepeatDisplay:"5.4~16.3", maxFreq:23.9, light:"405nm蓝光", sz:"E" },
+    { model:"MV-DP2062-01P V2.0", series:"DP2000", points:3200, cd:61.5, xNear:18, xRef:19, xFar:20, zRange:11, zRes:"0.94~1.22", zRepeat:1.9, zRepeatMax:6.1, zRepeatDisplay:"1.9~6.1", maxFreq:23.9, light:"405nm蓝光", sz:"F" },
+    { model:"MV-DP2080-01P V2.0", series:"DP2000", points:3200, cd:80.2, xNear:60, xRef:62.9, xFar:65.8, zRange:15.2, zRes:"3.77~4.54", zRepeat:7.5, zRepeatMax:22.7, zRepeatDisplay:"7.5~22.7", maxFreq:23.9, light:"405nm蓝光", sz:"G" },
+    { model:"MV-DP2120-01P V2.0", series:"DP2000", points:3200, cd:120, xNear:58, xRef:76.5, xFar:95, zRange:80, zRes:"3.66~8.36", zRepeat:7.3, zRepeatMax:41.8, zRepeatDisplay:"7.3~41.8", maxFreq:23.9, light:"405nm蓝光", sz:"H" },
+    { model:"MV-DP2120-03P V2.0", series:"DP2000", points:3200, cd:120, xNear:58, xRef:76.5, xFar:95, zRange:80, zRes:"3.66~8.36", zRepeat:7.3, zRepeatMax:41.8, zRepeatDisplay:"7.3~41.8", maxFreq:23.9, light:"650nm红光", sz:"H" },
+    { model:"MV-DP2140-01P V2.0", series:"DP2000", points:3200, cd:141, xNear:91, xRef:97.5, xFar:104, zRange:26, zRes:"6.38~7.09", zRepeat:12.8, zRepeatMax:35.5, zRepeatDisplay:"12.8~35.5", maxFreq:23.9, light:"405nm蓝光", sz:"I" },
+    { model:"MV-DP2240-01P V2.0", series:"DP2000", points:3200, cd:245, xNear:100, xRef:150, xFar:200, zRange:200, zRes:"6.47~26.11", zRepeat:12.9, zRepeatMax:130.6, zRepeatDisplay:"12.9~130.6", maxFreq:23.9, light:"405nm蓝光", sz:"J" },
+    { model:"MV-DP2240-03P V2.0", series:"DP2000", points:3200, cd:245, xNear:100, xRef:150, xFar:200, zRange:200, zRes:"6.47~26.11", zRepeat:12.9, zRepeatMax:130.6, zRepeatDisplay:"12.9~130.6", maxFreq:23.9, light:"650nm红光", sz:"J" },
+    { model:"MV-DP2300-01P V2.0", series:"DP2000", points:3200, cd:300, xNear:130, xRef:183, xFar:236, zRange:210, zRes:"9.36~26.27", zRepeat:18.7, zRepeatMax:131.3, zRepeatDisplay:"18.7~131.3", maxFreq:23.9, light:"405nm蓝光", sz:"K" },
+    { model:"MV-DP2300-03P V2.0", series:"DP2000", points:3200, cd:300, xNear:130, xRef:183, xFar:236, zRange:210, zRes:"9.36~26.27", zRepeat:18.7, zRepeatMax:131.3, zRepeatDisplay:"18.7~131.3", maxFreq:23.9, light:"650nm红光", sz:"K" },
+    { model:"MV-DP2470-01P V2.0", series:"DP2000", points:3200, cd:565, xNear:142, xRef:315, xFar:488, zRange:670, zRes:"10.39~169.8", zRepeat:20.8, zRepeatMax:849.0, zRepeatDisplay:"20.8~849.0", maxFreq:23.9, light:"405nm蓝光", sz:"J" },
+    { model:"MV-DP2470-03P V2.0", series:"DP2000", points:3200, cd:565, xNear:142, xRef:315, xFar:488, zRange:670, zRes:"10.39~169.8", zRepeat:20.8, zRepeatMax:849.0, zRepeatDisplay:"20.8~849.0", maxFreq:23.9, light:"650nm红光", sz:"J" },
+    { model:"MV-DP2580-01P V2.0", series:"DP2000", points:3200, cd:585, xNear:174, xRef:328, xFar:482, zRange:580, zRes:"14.45~98.8", zRepeat:28.9, zRepeatMax:494.0, zRepeatDisplay:"28.9~494.0", maxFreq:23.9, light:"405nm蓝光", sz:"K" },
+    { model:"MV-DP2580-03P V2.0", series:"DP2000", points:3200, cd:585, xNear:174, xRef:328, xFar:482, zRange:580, zRes:"14.45~98.8", zRepeat:28.9, zRepeatMax:494.0, zRepeatDisplay:"28.9~494.0", maxFreq:23.9, light:"650nm红光", sz:"K" },
+    { model:"MV-DP2900-03P V2.0", series:"DP2000", points:3200, cd:925, xNear:250, xRef:485, xFar:720, zRange:910, zRes:"16.86~180.2", zRepeat:33.7, zRepeatMax:901.0, zRepeatDisplay:"33.7~901.0", maxFreq:23.9, light:"650nm红光", sz:"L" },
+    { model:"MV-DP3020-01P V2.0", series:"DP3000", points:3200, cd:21.4, xNear:14, xRef:14.3, xFar:14.6, zRange:6.8, zRes:"0.71~0.78", zRepeat:1.4, zRepeatMax:3.9, zRepeatDisplay:"1.4~3.9", maxFreq:46.7, light:"405nm蓝光", sz:"A" },
+    { model:"MV-DP3023-01P V2.0", series:"DP3000", points:3200, cd:23.3, xNear:14.5, xRef:16, xFar:17.5, zRange:7.8, zRes:"0.56~0.82", zRepeat:1.1, zRepeatMax:4.1, zRepeatDisplay:"1.1~4.1", maxFreq:46.7, light:"405nm蓝光", sz:"B" },
+    { model:"MV-DP3050-01P V2.0", series:"DP3000", points:3200, cd:47, xNear:30.5, xRef:31.5, xFar:32.5, zRange:6, zRes:"1.58~1.74", zRepeat:3.2, zRepeatMax:8.7, zRepeatDisplay:"3.2~8.7", maxFreq:46.7, light:"405nm蓝光", sz:"C" },
+    { model:"MV-DP3060-01P V2.0", series:"DP3000", points:3200, cd:62, xNear:30, xRef:35, xFar:40, zRange:27, zRes:"1.74~3.07", zRepeat:3.5, zRepeatMax:15.3, zRepeatDisplay:"3.5~15.3", maxFreq:46.7, light:"405nm蓝光", sz:"D" },
+    { model:"MV-DP3060-03P V2.0", series:"DP3000", points:3200, cd:62, xNear:30, xRef:35, xFar:40, zRange:27, zRes:"1.74~3.07", zRepeat:3.5, zRepeatMax:15.3, zRepeatDisplay:"3.5~15.3", maxFreq:46.7, light:"650nm红光", sz:"D" },
+    { model:"MV-DP3061-01P V2.0", series:"DP3000", points:3200, cd:60.2, xNear:44.4, xRef:46.6, xFar:48.8, zRange:10.4, zRes:"2.71~3.26", zRepeat:5.4, zRepeatMax:16.3, zRepeatDisplay:"5.4~16.3", maxFreq:46.7, light:"405nm蓝光", sz:"E" },
+    { model:"MV-DP3062-01P V2.0", series:"DP3000", points:3200, cd:61.5, xNear:18, xRef:19, xFar:20, zRange:11, zRes:"0.94~1.22", zRepeat:1.9, zRepeatMax:6.1, zRepeatDisplay:"1.9~6.1", maxFreq:46.7, light:"405nm蓝光", sz:"F" },
+    { model:"MV-DP3080-01P V2.0", series:"DP3000", points:3200, cd:80.2, xNear:60, xRef:62.9, xFar:65.8, zRange:15.2, zRes:"3.77~4.54", zRepeat:7.5, zRepeatMax:22.7, zRepeatDisplay:"7.5~22.7", maxFreq:46.7, light:"405nm蓝光", sz:"G" },
+    { model:"MV-DP3120-01P V2.0", series:"DP3000", points:3200, cd:126, xNear:65, xRef:85, xFar:105, zRange:86, zRes:"4.38~8.33", zRepeat:8.8, zRepeatMax:41.6, zRepeatDisplay:"8.8~41.6", maxFreq:46.7, light:"405nm蓝光", sz:"H" },
+    { model:"MV-DP3120-03P V2.0", series:"DP3000", points:3200, cd:126, xNear:65, xRef:85, xFar:105, zRange:86, zRes:"4.38~8.33", zRepeat:8.8, zRepeatMax:41.6, zRepeatDisplay:"8.8~41.6", maxFreq:46.7, light:"650nm红光", sz:"H" },
+    { model:"MV-DP3140-01P V2.0", series:"DP3000", points:3200, cd:141, xNear:91, xRef:97.5, xFar:104, zRange:26, zRes:"6.38~7.09", zRepeat:12.8, zRepeatMax:35.5, zRepeatDisplay:"12.8~35.5", maxFreq:46.7, light:"405nm蓝光", sz:"I" },
+    { model:"MV-DP3240-01P V2.0", series:"DP3000", points:3200, cd:245, xNear:100, xRef:150, xFar:200, zRange:200, zRes:"6.47~26.11", zRepeat:12.9, zRepeatMax:130.6, zRepeatDisplay:"12.9~130.6", maxFreq:46.7, light:"405nm蓝光", sz:"J" },
+    { model:"MV-DP3240-03P V2.0", series:"DP3000", points:3200, cd:245, xNear:100, xRef:150, xFar:200, zRange:200, zRes:"6.47~26.11", zRepeat:12.9, zRepeatMax:130.6, zRepeatDisplay:"12.9~130.6", maxFreq:46.7, light:"650nm红光", sz:"J" },
+    { model:"MV-DP3300-01P V2.0", series:"DP3000", points:3200, cd:300, xNear:130, xRef:183, xFar:236, zRange:210, zRes:"9.36~26.27", zRepeat:18.7, zRepeatMax:131.3, zRepeatDisplay:"18.7~131.3", maxFreq:46.7, light:"405nm蓝光", sz:"K" },
+    { model:"MV-DP3300-03P V2.0", series:"DP3000", points:3200, cd:300, xNear:130, xRef:183, xFar:236, zRange:210, zRes:"9.36~26.27", zRepeat:18.7, zRepeatMax:131.3, zRepeatDisplay:"18.7~131.3", maxFreq:46.7, light:"650nm红光", sz:"K" },
+    { model:"MV-DP3470-01P V2.0", series:"DP3000", points:3200, cd:565, xNear:142, xRef:315, xFar:488, zRange:670, zRes:"10.39~169.8", zRepeat:20.8, zRepeatMax:849.0, zRepeatDisplay:"20.8~849.0", maxFreq:46.7, light:"405nm蓝光", sz:"J" },
+    { model:"MV-DP3470-03P V2.0", series:"DP3000", points:3200, cd:565, xNear:142, xRef:315, xFar:488, zRange:670, zRes:"10.39~169.8", zRepeat:20.8, zRepeatMax:849.0, zRepeatDisplay:"20.8~849.0", maxFreq:46.7, light:"650nm红光", sz:"J" },
+    { model:"MV-DP3580-01P V2.0", series:"DP3000", points:3200, cd:585, xNear:174, xRef:328, xFar:482, zRange:580, zRes:"14.45~98.8", zRepeat:28.9, zRepeatMax:494.0, zRepeatDisplay:"28.9~494.0", maxFreq:46.7, light:"405nm蓝光", sz:"K" },
+    { model:"MV-DP3580-03P V2.0", series:"DP3000", points:3200, cd:585, xNear:174, xRef:328, xFar:482, zRange:580, zRes:"14.45~98.8", zRepeat:28.9, zRepeatMax:494.0, zRepeatDisplay:"28.9~494.0", maxFreq:46.7, light:"650nm红光", sz:"K" },
+    { model:"MV-DP3900-03P V2.0", series:"DP3000", points:3200, cd:947.5, xNear:270, xRef:495, xFar:720, zRange:905, zRes:"23.04~185.1", zRepeat:46.1, zRepeatMax:925.5, zRepeatDisplay:"46.1~925.5", maxFreq:46.7, light:"650nm红光", sz:"L" },
+    { model:"MV-DP2060-01D V2.0", series:"DP3000", points:3200, cd:63.5, xNear:26.5, xRef:31, xFar:35.5, zRange:26, zRes:"1.51~2.68", zRepeat:3.0, zRepeatMax:13.4, zRepeatDisplay:"3.0~13.4", maxFreq:23.9, light:"405nm蓝光", sz:"A", note:"双目单线" },
+    { model:"MV-DP2120-01D V2.0", series:"DP3000", points:3200, cd:117, xNear:57, xRef:74.2, xFar:91.4, zRange:80, zRes:"3.90~7.56", zRepeat:7.8, zRepeatMax:37.8, zRepeatDisplay:"7.8~37.8", maxFreq:23.9, light:"405nm蓝光", sz:"B", note:"双目单线" },
+    { model:"MV-DP3060-01D V2.0", series:"DP3000", points:3200, cd:63.5, xNear:26.5, xRef:31, xFar:35.5, zRange:26, zRes:"1.51~2.68", zRepeat:3.0, zRepeatMax:13.4, zRepeatDisplay:"3.0~13.4", maxFreq:46.7, light:"405nm蓝光", sz:"C", note:"双目单线" },
+    { model:"MV-DP3062-01D V2.0", series:"DP3000", points:3200, cd:61.5, xNear:16.6, xRef:17.8, xFar:19, zRange:11, zRes:"0.93~1.23", zRepeat:1.9, zRepeatMax:6.2, zRepeatDisplay:"1.9~6.2", maxFreq:46.7, light:"405nm蓝光", sz:"D", note:"双目单线" },
+    { model:"MV-DP3120-01D V2.0", series:"DP3000", points:3200, cd:117, xNear:57, xRef:74.2, xFar:91.4, zRange:80, zRes:"3.89~7.56", zRepeat:7.8, zRepeatMax:37.8, zRepeatDisplay:"7.8~37.8", maxFreq:46.7, light:"405nm蓝光", sz:"E", note:"双目单线" },
+    { model:"MV-DP4020-01P", series:"DP4000", points:4080, cd:22.6, xNear:13.5, xRef:14, xFar:14.5, zRange:5.2, zRes:"0.41~0.58", zRepeat:0.8, zRepeatMax:2.9, zRepeatDisplay:"0.8~2.9", maxFreq:49, light:"405nm蓝光", sz:"A" },
+    { model:"MV-DP4060-01P", series:"DP4000", points:4080, cd:60, xNear:28, xRef:32, xFar:36, zRange:21, zRes:"1.06~1.98", zRepeat:2.1, zRepeatMax:9.9, zRepeatDisplay:"2.1~9.9", maxFreq:49, light:"405nm蓝光", sz:"B" },
+    { model:"MV-DP4090-01P", series:"DP4000", points:4080, cd:94, xNear:44, xRef:51.5, xFar:59, zRange:42, zRes:"1.87~3.98", zRepeat:3.7, zRepeatMax:19.9, zRepeatDisplay:"3.7~19.9", maxFreq:49, light:"405nm蓝光", sz:"C" },
+    { model:"MV-DP4180-01P", series:"DP4000", points:4080, cd:175, xNear:75, xRef:100, xFar:125, zRange:100, zRes:"3.72~8.40", zRepeat:7.4, zRepeatMax:42.0, zRepeatDisplay:"7.4~42.0", maxFreq:49, light:"405nm蓝光", sz:"D" },
+    { model:"MV-DP4180-03P", series:"DP4000", points:4080, cd:175, xNear:75, xRef:100, xFar:125, zRange:100, zRes:"3.72~8.40", zRepeat:7.4, zRepeatMax:42.0, zRepeatDisplay:"7.4~42.0", maxFreq:49, light:"650nm红光", sz:"D" },
+    { model:"MV-DP4430-01P", series:"DP4000", points:4080, cd:430, xNear:153, xRef:241, xFar:329, zRange:340, zRes:"8.4~35.5", zRepeat:16.8, zRepeatMax:177.5, zRepeatDisplay:"16.8~177.5", maxFreq:49, light:"405nm蓝光", sz:"E" },
+    { model:"MV-DP4430-03P", series:"DP4000", points:4080, cd:430, xNear:153, xRef:241, xFar:329, zRange:340, zRes:"8.4~35.5", zRepeat:16.8, zRepeatMax:177.5, zRepeatDisplay:"16.8~177.5", maxFreq:49, light:"650nm红光", sz:"E" },
+    { model:"MV-DP4940-03P", series:"DP4000", points:4080, cd:940, xNear:280, xRef:515, xFar:750, zRange:900, zRes:"14.8~98.7", zRepeat:29.6, zRepeatMax:493.5, zRepeatDisplay:"29.6~493.5", maxFreq:49, light:"650nm红光", sz:"F" },
+    { model:"MV-DS5040-02H", series:"5M", points:5100000, cd:100, xNear:38.4, xRef:40, xFar:41.6, zRange:5, zRes:"16μm/pixel", zRepeat:999, zRepeatMax:999, zRepeatDisplay:"16μm/pixel", maxFreq:9, light:"蓝色LED", sz:"A", category:"structured_light", note:"5M像素结构光, IP67" },
+    { model:"MV-DLS300P-04T", series:"DLS-T", points:3200, cd:400, xNear:220, xRef:350, xFar:480, zRange:400, zRes:"80μm@600mm", zRepeat:999, zRepeatMax:999, zRepeatDisplay:"80μm@600mm", maxFreq:0.5, light:"蓝色激光+RGB", sz:"A", category:"laser_tracker", note:"大景深激光跟踪" },
+    { model:"MV-DLS1300P", series:"DLS", points:3200, cd:2500, xNear:1360, xRef:2250, xFar:3200, zRange:2000, zRes:"300μm@2500mm", zRepeat:999, zRepeatMax:999, zRepeatDisplay:"300μm@2500mm", maxFreq:0.5, light:"RGB+深度图", sz:"C", category:"laser_tracker", note:"大视野激光跟踪" },
+    { model:"MV-DPS200P-02", series:"DPS", points:3200, cd:250, xNear:140, xRef:250, xFar:440, zRange:250, zRes:"20μm@300mm", zRepeat:999, zRepeatMax:999, zRepeatDisplay:"20μm@300mm", maxFreq:5, light:"蓝色LED+RGB", sz:"A", category:"projection_sl", note:"投影结构光, RGB-D" },
+    { model:"MV-DPS250P-03", series:"DPS", points:3200, cd:300, xNear:200, xRef:450, xFar:720, zRange:600, zRes:"60μm@600mm", zRepeat:999, zRepeatMax:999, zRepeatDisplay:"60μm@600mm", maxFreq:5, light:"蓝色LED+RGB", sz:"A", category:"projection_sl", note:"投影结构光, 大视野" },
+    { model:"MV-DPS250P-03W", series:"DPS", points:3200, cd:300, xNear:200, xRef:450, xFar:720, zRange:600, zRes:"60μm@600mm", zRepeat:999, zRepeatMax:999, zRepeatDisplay:"60μm@600mm", maxFreq:5, light:"蓝色LED+RGB", sz:"B", category:"projection_sl", note:"投影结构光, IP65" },
+    { model:"MV-DB500S-S", series:"DB500", points:3200, cd:500, xNear:470, xRef:1000, xFar:2500, zRange:1500, zRes:"4mm@1m", zRepeat:8000.0, zRepeatMax:20000.0, zRepeatDisplay:"8000.0~20000.0", maxFreq:30, light:"白光+RGBD", sz:"A", category:"rgbd_smart", note:"RGBD智能传感器" },
+    { model:"MV-DB500S-C", series:"DB500", points:3200, cd:500, xNear:470, xRef:1000, xFar:2500, zRange:1500, zRes:"4mm@1m", zRepeat:8000.0, zRepeatMax:20000.0, zRepeatDisplay:"8000.0~20000.0", maxFreq:20, light:"白光+RGBD", sz:"A", category:"rgbd_smart", note:"RGBD EDP模式" },
+    { model:"MV-DB500S-V", series:"DB500", points:3200, cd:500, xNear:470, xRef:1000, xFar:2400, zRange:1500, zRes:"4mm@1m", zRepeat:8000.0, zRepeatMax:20000.0, zRepeatDisplay:"8000.0~20000.0", maxFreq:8, light:"白光+RGBD", sz:"B", category:"rgbd_smart", note:"RGBD 体积测量" },
+    { model:"MV-DB700S-S", series:"DB700", points:3200, cd:300, xNear:470, xRef:850, xFar:2200, zRange:700, zRes:"2.5mm@0.5m", zRepeat:5000.0, zRepeatMax:12500.0, zRepeatDisplay:"5000.0~12500.0", maxFreq:30, light:"白光+RGBD", sz:"A", category:"rgbd_smart", note:"RGBD 高精度定位" },
+    { model:"MV-DB700S-C", series:"DB700", points:3200, cd:300, xNear:470, xRef:850, xFar:2200, zRange:700, zRes:"2.5mm@0.5m", zRepeat:5000.0, zRepeatMax:12500.0, zRepeatDisplay:"5000.0~12500.0", maxFreq:20, light:"白光+RGBD", sz:"A", category:"rgbd_smart", note:"RGBD EDP" },
+    { model:"MV-DB1300A", series:"DB1300", points:3200, cd:1100, xNear:870, xRef:1750, xFar:3340, zRange:2100, zRes:"1.5mm@2100mm", zRepeat:3000.0, zRepeatMax:7500.0, zRepeatDisplay:"3000.0~7500.0", maxFreq:0.7, light:"白光+RGBD", sz:"B", category:"rgbd_smart", note:"RGBD 大视野" },
+    { model:"MV-DT1300S", series:"DT", points:640, cd:2500, xNear:500, xRef:2500, xFar:5000, zRange:4500, zRes:"0.5%depth", zRepeat:999, zRepeatMax:999, zRepeatDisplay:"0.5%depth", maxFreq:30, light:"ToF红外", sz:"A", category:"tof", note:"ToF深度传感器, 0.5~5m" },];
+  const COMPETITOR_DB=[    { brand:"Keyence", model:"LJ-X7020", xRange:7.5, zRepeat:0.2, zRange:5.2, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"10", scanRate:"X-64", note:"LJ-V7000" },
+    { brand:"Keyence", model:"LJ-X7060", xRange:15, zRepeat:0.4, zRange:16, hikModel:"MV-DP3062-01P V2.0", hikSeries:"DP3000", xResolution:"20", scanRate:"X-64", note:"LJ-V7000" },
+    { brand:"Keyence", model:"LJ-X7080", xRange:39, zRepeat:0.5, zRange:46, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"50", scanRate:"X-64", note:"LJ-V7000" },
+    { brand:"Keyence", model:"LJ-X7200", xRange:73, zRepeat:1.0, zRange:96, hikModel:"MV-DP3120-01P V2.0", hikSeries:"DP3000", xResolution:"100", scanRate:"X-64", note:"LJ-V7000" },
+    { brand:"Keyence", model:"LJ-X7300", xRange:240, zRepeat:5.0, zRange:290, hikModel:"MV-DP3300-01P V2.0", hikSeries:"DP3000", xResolution:"300", scanRate:"X-64", note:"LJ-V7000" },
+    { brand:"Keyence", model:"LJ-X8020", xRange:8, zRepeat:0.3, zRange:4.4, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"2-2.5", scanRate:"X-1.6", note:"LJ-X8000" },
+    { brand:"Keyence", model:"LJ-X8060", xRange:16, zRepeat:0.4, zRange:9.5, hikModel:"MV-DP3062-01P V2.0", hikSeries:"DP3000", xResolution:"4-5", scanRate:"X-1.6", note:"LJ-X8000" },
+    { brand:"Keyence", model:"LJ-X8080", xRange:39, zRepeat:0.5, zRange:41, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"10-12.5", scanRate:"X-1.6", note:"LJ-X8000" },
+    { brand:"Keyence", model:"LJ-X8200", xRange:80, zRepeat:1.0, zRange:68, hikModel:"MV-DP3120-01P V2.0", hikSeries:"DP3000", xResolution:"20-25", scanRate:"X-1.6", note:"LJ-X8000" },
+    { brand:"Keyence", model:"LJ-X8300", xRange:160, zRepeat:3.0, zRange:106, hikModel:"MV-DP3300-01P V2.0", hikSeries:"DP3000", xResolution:"40-50", scanRate:"X-1.6", note:"LJ-X8000" },
+    { brand:"Keyence", model:"LJ-X8400", xRange:240, zRepeat:5.0, zRange:315, hikModel:"MV-DP3300-03P V2.0", hikSeries:"DP3000", xResolution:"50-100", scanRate:"X-1.6", note:"LJ-X8000" },
+    { brand:"Keyence", model:"LJ-X8900", xRange:720, zRepeat:10, zRange:800, hikModel:"MV-DP3900-03P V2.0", hikSeries:"DP3000", xResolution:"100-255", scanRate:"X-1.6", note:"LJ-X8000" },
+    { brand:"LMI", model:"Gocator 2410", xRange:10, zRepeat:0.2, zRange:6, hikModel:"MV-DP2050-01P V2.0", hikSeries:"DP2000", xResolution:"5.8-6.2", scanRate:"0.2-5", note:"2400系列" },
+    { brand:"LMI", model:"Gocator 2420", xRange:32, zRepeat:0.4, zRange:25, hikModel:"MV-DP2060-01P V2.0", hikSeries:"DP2000", xResolution:"14-16.5", scanRate:"0.2-5", note:"2400系列" },
+    { brand:"LMI", model:"Gocator 2430", xRange:85, zRepeat:0.8, zRange:80, hikModel:"MV-DP2120-01P V2.0", hikSeries:"DP2000", xResolution:"35-57", scanRate:"0.2-5", note:"2400系列" },
+    { brand:"LMI", model:"Gocator 2440", xRange:194, zRepeat:1.2, zRange:210, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"90-130", scanRate:"0.2-5", note:"2400系列" },
+    { brand:"LMI", model:"Gocator 2450", xRange:425, zRepeat:2.0, zRange:550, hikModel:"MV-DP2470-01P V2.0", hikSeries:"DP2000", xResolution:"100-255", scanRate:"0.2-5", note:"2400系列" },
+    { brand:"LMI", model:"Gocator 2490", xRange:2000, zRepeat:12, zRange:1525, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"250-1100", scanRate:"0.2-5", note:"2400系列" },
+    { brand:"LMI", model:"Gocator 2510", xRange:14.5, zRepeat:0.2, zRange:6, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"8", scanRate:"2.4-10", note:"2500系列" },
+    { brand:"LMI", model:"Gocator 2520", xRange:32.5, zRepeat:0.4, zRange:25, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"13-17", scanRate:"1.6-10", note:"2500系列" },
+    { brand:"LMI", model:"Gocator 2530", xRange:100, zRepeat:0.5, zRange:80, hikModel:"MV-DP3120-01P V2.0", hikSeries:"DP3000", xResolution:"28-54", scanRate:"2-10", note:"2500系列" },
+    { brand:"LMI", model:"Gocator 2540", xRange:292, zRepeat:1.2, zRange:295, hikModel:"MV-DP3300-01P V2.0", hikSeries:"DP3000", xResolution:"64-160", scanRate:"1.7-10", note:"2500系列" },
+    { brand:"LMI", model:"Gocator 2550", xRange:518, zRepeat:2.0, zRange:595, hikModel:"MV-DP3580-01P V2.0", hikSeries:"DP3000", xResolution:"80-270", scanRate:"1.8-10", note:"2500系列" },
+    { brand:"LMI", model:"Gocator 2610", xRange:14.5, zRepeat:0.15, zRange:6, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"2.53", scanRate:"1.1-9", note:"2600系列" },
+    { brand:"LMI", model:"Gocator 2618", xRange:34, zRepeat:0.36, zRange:21, hikModel:"MV-DP4060-01P", hikSeries:"DP4000", xResolution:"5-5.4", scanRate:"0.7-1", note:"2600系列" },
+    { brand:"LMI", model:"Gocator 2629", xRange:59, zRepeat:0.66, zRange:42, hikModel:"MV-DP4090-01P", hikSeries:"DP4000", xResolution:"18-23", scanRate:"2.5-9", note:"2600系列" },
+    { brand:"LMI", model:"Gocator 2630", xRange:125, zRepeat:1.5, zRange:100, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"18-33", scanRate:"0.6-9", note:"2600系列" },
+    { brand:"LMI", model:"Gocator 2640", xRange:125, zRepeat:1.5, zRange:100, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"18-33", scanRate:"0.6-9", note:"2600系列" },
+    { brand:"LMI", model:"Gocator 2650", xRange:329, zRepeat:2.27, zRange:340, hikModel:"MV-DP4430-01P", hikSeries:"DP4000", xResolution:"47-104", scanRate:"0.6-9", note:"2600系列" },
+    { brand:"LMI", model:"Gocator 2670", xRange:750, zRepeat:9.45, zRange:900, hikModel:"MV-DP4940-03P", hikSeries:"DP4000", xResolution:"67-197", scanRate:"0.6-9", note:"2600系列" },
+    { brand:"LMI", model:"Gocator 2690", xRange:750, zRepeat:9.45, zRange:900, hikModel:"MV-DP4940-03P", hikSeries:"DP4000", xResolution:"124-550", scanRate:"0.9-10", note:"2600系列" },
+    { brand:"Sick", model:"Ruler3002", xRange:26.6, zRepeat:0.3, zRange:8.7, hikModel:"MV-DP3062-01P V2.0", hikSeries:"DP3000", xResolution:"11-12", scanRate:"7-46", note:"" },
+    { brand:"Sick", model:"Ruler3004", xRange:45, zRepeat:0.5, zRange:17.6, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"17-20", scanRate:"7-46", note:"" },
+    { brand:"Sick", model:"Ruler3010", xRange:105, zRepeat:0.8, zRange:50, hikModel:"MV-DP3120-01P V2.0", hikSeries:"DP3000", xResolution:"32-45", scanRate:"7-46", note:"" },
+    { brand:"Sick", model:"Ruler3020", xRange:220, zRepeat:3.9, zRange:125, hikModel:"MV-DP3300-03P V2.0", hikSeries:"DP3000", xResolution:"65-92", scanRate:"7-46", note:"" },
+    { brand:"Sick", model:"Ruler3060", xRange:740, zRepeat:8.0, zRange:420, hikModel:"MV-DP3900-03P V2.0", hikSeries:"DP3000", xResolution:"168-313", scanRate:"7-46", note:"" },
+    { brand:"Sick", model:"Ruler3120", xRange:1680, zRepeat:6.6, zRange:1015, hikModel:"MV-DP3900-03P V2.0", hikSeries:"DP3000", xResolution:"246-710", scanRate:"7-46", note:"" },
+    { brand:"SSZN", model:"SR7050", xRange:31.5, zRepeat:0.2, zRange:5, hikModel:"MV-DP2050-01P V2.0", hikSeries:"DP2000", xResolution:"10", scanRate:"2.5-10", note:"SR7000" },
+    { brand:"SSZN", model:"SR7060", xRange:46.5, zRepeat:0.3, zRange:9.5, hikModel:"MV-DP2061-01P V2.0", hikSeries:"DP2000", xResolution:"15", scanRate:"2.5-10", note:"SR7000" },
+    { brand:"SSZN", model:"SR7060D", xRange:31, zRepeat:0.2, zRange:6, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"10", scanRate:"2.5-10", note:"SR7000" },
+    { brand:"SSZN", model:"SR7080", xRange:62.8, zRepeat:0.4, zRange:12, hikModel:"MV-DP2080-01P V2.0", hikSeries:"DP2000", xResolution:"20", scanRate:"2.5-10", note:"SR7000" },
+    { brand:"SSZN", model:"SR7140", xRange:105, zRepeat:0.5, zRange:47, hikModel:"MV-DP2140-01P V2.0", hikSeries:"DP2000", xResolution:"30", scanRate:"1.25-10", note:"SR7000" },
+    { brand:"SSZN", model:"SR7240", xRange:157, zRepeat:1.0, zRange:40, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"50", scanRate:"2.5-10", note:"SR7000" },
+    { brand:"SSZN", model:"SR7300", xRange:320, zRepeat:8.0, zRange:288, hikModel:"MV-DP2470-01P V2.0", hikSeries:"DP2000", xResolution:"100", scanRate:"1-4", note:"SR7000" },
+    { brand:"SSZN", model:"SR7400", xRange:280, zRepeat:5.0, zRange:200, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"90", scanRate:"1.25-10", note:"SR7000" },
+    { brand:"SSZN", model:"SR7900", xRange:576, zRepeat:12, zRange:500, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"180", scanRate:"1.25-4.5", note:"SR7000" },
+    { brand:"SSZN", model:"SR8020", xRange:16, zRepeat:0.1, zRange:5.2, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"5", scanRate:"3.2-67", note:"SR8000" },
+    { brand:"SSZN", model:"SR8062", xRange:17.6, zRepeat:0.15, zRange:8.5, hikModel:"MV-DP3062-01P V2.0", hikSeries:"DP3000", xResolution:"5.5", scanRate:"3.2-67", note:"SR8000" },
+    { brand:"SSZN", model:"SR8060", xRange:36, zRepeat:0.2, zRange:18, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"12", scanRate:"3.2-67", note:"SR8000" },
+    { brand:"SSZN", model:"SR8080", xRange:54, zRepeat:1.0, zRange:35, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"19", scanRate:"3.2-67", note:"SR8000" },
+    { brand:"SSZN", model:"SR9040", xRange:18, zRepeat:0.1, zRange:6.6, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"3", scanRate:"1.5-13", note:"SR9000" },
+    { brand:"SSZN", model:"SR9041", xRange:20, zRepeat:0.1, zRange:8.2, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"3.5", scanRate:"1.5-13", note:"SR9000" },
+    { brand:"SSZN", model:"SR9060", xRange:42, zRepeat:0.4, zRange:24, hikModel:"MV-DP4060-01P", hikSeries:"DP4000", xResolution:"7", scanRate:"1.5-13", note:"SR9000" },
+    { brand:"SSZN", model:"SR9061", xRange:30, zRepeat:0.2, zRange:14.5, hikModel:"MV-DP4060-01P", hikSeries:"DP4000", xResolution:"5", scanRate:"1.5-13", note:"SR9000" },
+    { brand:"SSZN", model:"SR9070", xRange:48, zRepeat:0.5, zRange:29, hikModel:"MV-DP4060-01P", hikSeries:"DP4000", xResolution:"6.5", scanRate:"1.5-13", note:"SR9000" },
+    { brand:"SSZN", model:"SR9080", xRange:59, zRepeat:0.6, zRange:35, hikModel:"MV-DP4090-01P", hikSeries:"DP4000", xResolution:"10", scanRate:"1.5-13", note:"SR9000" },
+    { brand:"SSZN", model:"SR9160", xRange:120, zRepeat:1.5, zRange:90, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"19", scanRate:"1.5-13", note:"SR9000" },
+    { brand:"SSZN", model:"SRI7050", xRange:30, zRepeat:0.2, zRange:16, hikModel:"MV-DP2050-01P V2.0", hikSeries:"DP2000", xResolution:"10", scanRate:"0.75-10", note:"SRI7000" },
+    { brand:"SSZN", model:"SRI7060", xRange:49, zRepeat:0.3, zRange:33, hikModel:"MV-DP2061-01P V2.0", hikSeries:"DP2000", xResolution:"15", scanRate:"0.75-10", note:"SRI7000" },
+    { brand:"SSZN", model:"SRI7080", xRange:69, zRepeat:0.4, zRange:42.5, hikModel:"MV-DP2080-01P V2.0", hikSeries:"DP2000", xResolution:"20", scanRate:"0.75-10", note:"SRI7000" },
+    { brand:"SSZN", model:"SRI7120R", xRange:53, zRepeat:0.6, zRange:27, hikModel:"MV-DP2120-01P V2.0", hikSeries:"DP2000", xResolution:"16", scanRate:"1.4-10", note:"SRI7000" },
+    { brand:"SSZN", model:"SRI7140", xRange:110, zRepeat:0.5, zRange:88, hikModel:"MV-DP2140-01P V2.0", hikSeries:"DP2000", xResolution:"30", scanRate:"0.75-10", note:"SRI7000" },
+    { brand:"SSZN", model:"SRI7240", xRange:185, zRepeat:1.0, zRange:153, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"50", scanRate:"0.75-10", note:"SRI7000" },
+    { brand:"SSZN", model:"SRI7300", xRange:540, zRepeat:8.0, zRange:347, hikModel:"MV-DP2470-01P V2.0", hikSeries:"DP2000", xResolution:"100", scanRate:"1-10", note:"SRI7000" },
+    { brand:"SSZN", model:"SRI7400R", xRange:300, zRepeat:5.0, zRange:339, hikModel:"MV-DP2470-01P V2.0", hikSeries:"DP2000", xResolution:"90", scanRate:"0.75-10", note:"SRI7000" },
+    { brand:"SSZN", model:"SRI7700", xRange:460, zRepeat:10, zRange:315, hikModel:"MV-DP2470-01P V2.0", hikSeries:"DP2000", xResolution:"150", scanRate:"0.75-10", note:"SRI7000" },
+    { brand:"SSZN", model:"SRI71600", xRange:2250, zRepeat:100, zRange:1530, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"500", scanRate:"1.25-10", note:"SRI7000" },
+    { brand:"SSZN", model:"SRI8020", xRange:16, zRepeat:0.1, zRange:5.2, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"5", scanRate:"3.2-60", note:"SRI8000" },
+    { brand:"SSZN", model:"SRI8060", xRange:36, zRepeat:0.02, zRange:18, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"12", scanRate:"3.2-60", note:"SRI8000" },
+    { brand:"SSZN", model:"SRI8065E", xRange:21, zRepeat:0.12, zRange:14, hikModel:"MV-DP3062-01P V2.0", hikSeries:"DP3000", xResolution:"5.5", scanRate:"2.3-60", note:"SRI8000" },
+    { brand:"SSZN", model:"SRI8120", xRange:100, zRepeat:0.45, zRange:68, hikModel:"MV-DP3120-01P V2.0", hikSeries:"DP3000", xResolution:"30", scanRate:"2.3-60", note:"SRI8000" },
+    { brand:"Photon", model:"GL-7020", xRange:10.1, zRepeat:0.5, zRange:2.6, hikModel:"MV-DP2050-01P V2.0", hikSeries:"DP2000", xResolution:"3~4", scanRate:"1.78~11", note:"GL7000" },
+    { brand:"Photon", model:"GL-7040", xRange:16.4, zRepeat:0.6, zRange:4.8, hikModel:"MV-DP2050-01P V2.0", hikSeries:"DP2000", xResolution:"4~6", scanRate:"1.78~11", note:"GL7000" },
+    { brand:"Photon", model:"GL-7060", xRange:33.3, zRepeat:0.6, zRange:12.2, hikModel:"MV-DP2060-01P V2.0", hikSeries:"DP2000", xResolution:"8~12", scanRate:"1.78~11", note:"GL7000" },
+    { brand:"Photon", model:"GL-7080", xRange:57, zRepeat:0.8, zRange:24, hikModel:"MV-DP2080-01P V2.0", hikSeries:"DP2000", xResolution:"15~18", scanRate:"1.78~11", note:"GL7000" },
+    { brand:"Photon", model:"GL-7160", xRange:100, zRepeat:1.5, zRange:46, hikModel:"MV-DP2120-01P V2.0", hikSeries:"DP2000", xResolution:"25~32", scanRate:"1.78~11", note:"GL7000" },
+    { brand:"Photon", model:"GL-7300", xRange:172, zRepeat:5.0, zRange:104, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"40~55", scanRate:"1.78~11", note:"GL7000" },
+    { brand:"Photon", model:"GL-7400", xRange:337, zRepeat:8.0, zRange:241, hikModel:"MV-DP2470-01P V2.0", hikSeries:"DP2000", xResolution:"60~110", scanRate:"1.78~11", note:"GL7000" },
+    { brand:"Photon", model:"GL-7600", xRange:983, zRepeat:8.0, zRange:488, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"150~320", scanRate:"1.78~11", note:"GL7000" },
+    { brand:"Photon", model:"GL-7900", xRange:818, zRepeat:25, zRange:728, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"120~260", scanRate:"1.78~11", note:"GL7000" },
+    { brand:"Photon", model:"GL-71200", xRange:2004, zRepeat:40, zRange:1278, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"180~640", scanRate:"1.78~11", note:"GL7000" },
+    { brand:"Photon", model:"GL-8020", xRange:10, zRepeat:0.3, zRange:4.6, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"2~3", scanRate:"4~49", note:"GL8000" },
+    { brand:"Photon", model:"GL-8040", xRange:16.4, zRepeat:0.4, zRange:8.6, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"3~5", scanRate:"4~49", note:"GL8000" },
+    { brand:"Photon", model:"GL-8060", xRange:34, zRepeat:0.4, zRange:22, hikModel:"MV-DP4060-01P", hikSeries:"DP4000", xResolution:"6~10", scanRate:"4~49", note:"GL8000" },
+    { brand:"Photon", model:"GL-8080", xRange:59, zRepeat:0.5, zRange:44, hikModel:"MV-DP4090-01P", hikSeries:"DP4000", xResolution:"10~15", scanRate:"4~49", note:"GL8000" },
+    { brand:"Photon", model:"GL-8160", xRange:104, zRepeat:1.0, zRange:82, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"15~30", scanRate:"4~49", note:"GL8000" },
+    { brand:"Photon", model:"GL-8300", xRange:189, zRepeat:3.0, zRange:182, hikModel:"MV-DP4430-01P", hikSeries:"DP4000", xResolution:"25~50", scanRate:"4~49", note:"GL8000" },
+    { brand:"Photon", model:"GL-8400", xRange:420, zRepeat:5.0, zRange:468, hikModel:"MV-DP4430-01P", hikSeries:"DP4000", xResolution:"40~120", scanRate:"4~49", note:"GL8000" },
+    { brand:"Photon", model:"GL-8600", xRange:983, zRepeat:5.0, zRange:488, hikModel:"MV-DP4940-03P", hikSeries:"DP4000", xResolution:"80~250", scanRate:"4~49", note:"GL8000" },
+    { brand:"Photon", model:"GL-8900", xRange:818, zRepeat:15, zRange:942, hikModel:"MV-DP4940-03P", hikSeries:"DP4000", xResolution:"70~200", scanRate:"4~49", note:"GL8000" },
+    { brand:"Photon", model:"GL-81200", xRange:2004, zRepeat:25, zRange:1278, hikModel:"MV-DP4940-03P", hikSeries:"DP4000", xResolution:"100~500", scanRate:"4~49", note:"GL8000" },
+    { brand:"Huaray", model:"DL3020B", xRange:13, zRepeat:0.1, zRange:6, hikModel:"MV-DP2050-01P V2.0", hikSeries:"DP2000", xResolution:"5.5-6.5", scanRate:"0.34-10", note:"DL3000" },
+    { brand:"Huaray", model:"DL3080B", xRange:80, zRepeat:0.8, zRange:65, hikModel:"MV-DP2120-01P V2.0", hikSeries:"DP2000", xResolution:"25-39", scanRate:"0.34-10", note:"DL3000" },
+    { brand:"Huaray", model:"DL3100B", xRange:230, zRepeat:1.2, zRange:195, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"54-112", scanRate:"0.34-10", note:"DL3000" },
+    { brand:"Huaray", model:"DL3250B", xRange:540, zRepeat:6.0, zRange:485, hikModel:"MV-DP2470-01P V2.0", hikSeries:"DP2000", xResolution:"115-264", scanRate:"0.34-10", note:"DL3000" },
+    { brand:"Huaray", model:"DL3300R", xRange:330, zRepeat:2.0, zRange:350, hikModel:"MV-DP2470-01P V2.0", hikSeries:"DP2000", xResolution:"92-161", scanRate:"0.34-10", note:"DL3000" },
+    { brand:"Huaray", model:"DL3400R", xRange:1145, zRepeat:10, zRange:798, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"245-560", scanRate:"0.34-10", note:"DL3000" },
+    { brand:"Huaray", model:"DL5020B-H", xRange:16, zRepeat:0.2, zRange:6.5, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"6-8", scanRate:"2.5-56", note:"DL5000高速" },
+    { brand:"Huaray", model:"DL5040B-H", xRange:37, zRepeat:0.4, zRange:24, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"14-19", scanRate:"2.5-56", note:"DL5000高速" },
+    { brand:"Huaray", model:"DL5090B-H", xRange:90, zRepeat:0.6, zRange:72, hikModel:"MV-DP3120-01P V2.0", hikSeries:"DP3000", xResolution:"30-50", scanRate:"2.5-56", note:"DL5000高速" },
+    { brand:"Huaray", model:"DL5140B-H", xRange:190, zRepeat:1.0, zRange:190, hikModel:"MV-DP3300-01P V2.0", hikSeries:"DP3000", xResolution:"49-99", scanRate:"2.5-56", note:"DL5000高速" },
+    { brand:"Huaray", model:"DL5020B", xRange:16, zRepeat:0.2, zRange:6.5, hikModel:"MV-DP2050-01P V2.0", hikSeries:"DP2000", xResolution:"6-8", scanRate:"1-20", note:"DL5000" },
+    { brand:"Huaray", model:"DL5040B", xRange:37, zRepeat:0.4, zRange:24, hikModel:"MV-DP2060-01P V2.0", hikSeries:"DP2000", xResolution:"14-19", scanRate:"1-20", note:"DL5000" },
+    { brand:"Huaray", model:"DL5090B", xRange:90, zRepeat:0.6, zRange:72, hikModel:"MV-DP2120-01P V2.0", hikSeries:"DP2000", xResolution:"30-50", scanRate:"1-20", note:"DL5000" },
+    { brand:"Huaray", model:"DL5140B", xRange:190, zRepeat:1.0, zRange:190, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"49-99", scanRate:"1-20", note:"DL5000" },
+    { brand:"Meca", model:"LNX-8030", xRange:37, zRepeat:0.2, zRange:30, hikModel:"MV-DP4060-01P", hikSeries:"DP4000", xResolution:"9", scanRate:"3.3-15", note:"" },
+    { brand:"Meca", model:"LNX-8080", xRange:96, zRepeat:0.5, zRange:100, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"23.5", scanRate:"3.3-15", note:"" },
+    { brand:"Meca", model:"LNX-8300", xRange:430, zRepeat:2.0, zRange:305, hikModel:"MV-DP4430-01P", hikSeries:"DP4000", xResolution:"105", scanRate:"3.3-15", note:"" },
+    { brand:"Meca", model:"LNX-7515", xRange:13, zRepeat:0.15, zRange:6, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"4", scanRate:"2-10", note:"7500系列" },
+    { brand:"Meca", model:"LNX-7530", xRange:35, zRepeat:0.2, zRange:25, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"11", scanRate:"2-10", note:"7500系列" },
+    { brand:"Meca", model:"LNX-7580", xRange:89, zRepeat:0.5, zRange:76, hikModel:"MV-DP3120-01P V2.0", hikSeries:"DP3000", xResolution:"28", scanRate:"2-10", note:"7500系列" },
+    { brand:"Meca", model:"LNX-75150", xRange:167, zRepeat:1.5, zRange:135, hikModel:"MV-DP3300-01P V2.0", hikSeries:"DP3000", xResolution:"52", scanRate:"2-10", note:"7500系列" },
+    { brand:"Meca", model:"LNX-75300", xRange:422, zRepeat:2.0, zRange:295, hikModel:"MV-DP3580-01P V2.0", hikSeries:"DP3000", xResolution:"132", scanRate:"2-10", note:"7500系列" },
+    { brand:"翌视", model:"LVM2010", xRange:18.3, zRepeat:0.2, zRange:10.7, hikModel:"MV-DP3062-01P V2.0", hikSeries:"DP3000", xResolution:"7.8-8.9", scanRate:"0.34-10", note:"LVM2000" },
+    { brand:"翌视", model:"LVM2012", xRange:12.9, zRepeat:0.1, zRange:6.6, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"5.6-6.3", scanRate:"0.34-10", note:"LVM2000" },
+    { brand:"翌视", model:"LVM2020", xRange:33.5, zRepeat:0.3, zRange:23.8, hikModel:"MV-DP2060-01P V2.0", hikSeries:"DP2000", xResolution:"13.4-16.4", scanRate:"0.34-10", note:"LVM2000" },
+    { brand:"翌视", model:"LVM2030", xRange:82, zRepeat:0.8, zRange:70.1, hikModel:"MV-DP2120-01P V2.0", hikSeries:"DP2000", xResolution:"27.1-40", scanRate:"0.34-10", note:"LVM2000" },
+    { brand:"翌视", model:"LVM2040", xRange:233.9, zRepeat:1.2, zRange:199.5, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"54-114.2", scanRate:"0.34-10", note:"LVM2000" },
+    { brand:"翌视", model:"LVM2050", xRange:337.8, zRepeat:2.0, zRange:356.5, hikModel:"MV-DP2470-03P V2.0", hikSeries:"DP2000", xResolution:"92.8-164.9", scanRate:"0.34-10", note:"LVM2000" },
+    { brand:"翌视", model:"LVM2060", xRange:543, zRepeat:6.0, zRange:488.4, hikModel:"MV-DP2470-03P V2.0", hikSeries:"DP2000", xResolution:"115.5-265.1", scanRate:"0.34-10", note:"LVM2000" },
+    { brand:"翌视", model:"LVM2063", xRange:1146, zRepeat:10, zRange:798, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"224.6-559.6", scanRate:"0.34-10", note:"LVM2000" },
+    { brand:"翌视", model:"LVM2065", xRange:1653, zRepeat:15, zRange:688, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"342-807", scanRate:"0.34-10", note:"LVM2000" },
+    { brand:"翌视", model:"LVM2070", xRange:1498.8, zRepeat:15, zRange:1283.2, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"338-731.8", scanRate:"0.34-10", note:"LVM2000" },
+    { brand:"翌视", model:"LVM2310", xRange:16.2, zRepeat:0.2, zRange:6.9, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"6.9-8.4", scanRate:"1-20", note:"LVM2300" },
+    { brand:"翌视", model:"LVM2320", xRange:38.6, zRepeat:0.4, zRange:24.3, hikModel:"MV-DP2060-01P V2.0", hikSeries:"DP2000", xResolution:"14.6-20.1", scanRate:"1-20", note:"LVM2300" },
+    { brand:"翌视", model:"LVM2330", xRange:90.5, zRepeat:0.6, zRange:73.9, hikModel:"MV-DP2120-01P V2.0", hikSeries:"DP2000", xResolution:"28.8-47.1", scanRate:"1-20", note:"LVM2300" },
+    { brand:"翌视", model:"LVM2331", xRange:92.9, zRepeat:0.8, zRange:89.2, hikModel:"MV-DP2120-01P V2.0", hikSeries:"DP2000", xResolution:"28.7-48.4", scanRate:"1-20", note:"LVM2300" },
+    { brand:"翌视", model:"LVM2340", xRange:191.3, zRepeat:1.0, zRange:190.8, hikModel:"MV-DP2240-03P V2.0", hikSeries:"DP2000", xResolution:"51.7-99.6", scanRate:"1-20", note:"LVM2300" },
+    { brand:"翌视", model:"LVM2346", xRange:318, zRepeat:2.0, zRange:378, hikModel:"MV-DP2470-03P V2.0", hikSeries:"DP2000", xResolution:"62.5-166", scanRate:"1-20", note:"LVM2300" },
+    { brand:"翌视", model:"LVM2510", xRange:16.2, zRepeat:0.2, zRange:6.9, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"7-8.6", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2512", xRange:15.7, zRepeat:0.2, zRange:6.8, hikModel:"MV-DP3062-01P V2.0", hikSeries:"DP3000", xResolution:"7-8.1", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2515", xRange:24.4, zRepeat:0.2, zRange:12.9, hikModel:"MV-DP3062-01P V2.0", hikSeries:"DP3000", xResolution:"9.8-12.7", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2518", xRange:35, zRepeat:0.4, zRange:23, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"13.7-18.2", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2519", xRange:35, zRepeat:0.4, zRange:23, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"13.7-18.2", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2520", xRange:38.6, zRepeat:0.4, zRange:24.3, hikModel:"MV-DP3060-01P V2.0", hikSeries:"DP3000", xResolution:"14.6-20.1", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2530", xRange:90.5, zRepeat:0.6, zRange:73.9, hikModel:"MV-DP3120-01P V2.0", hikSeries:"DP3000", xResolution:"28.8-47.1", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2531", xRange:110, zRepeat:0.7, zRange:107.8, hikModel:"MV-DP3120-01P V2.0", hikSeries:"DP3000", xResolution:"33.9-57.3", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2535", xRange:135.7, zRepeat:0.7, zRange:115, hikModel:"MV-DP3120-03P V2.0", hikSeries:"DP3000", xResolution:"42.4-70.7", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2540", xRange:191.3, zRepeat:1.0, zRange:190.8, hikModel:"MV-DP3300-03P V2.0", hikSeries:"DP3000", xResolution:"51.7-99.7", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2545", xRange:307.8, zRepeat:2.0, zRange:250.1, hikModel:"MV-DP3580-03P V2.0", hikSeries:"DP3000", xResolution:"100.7-160.3", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2546", xRange:318, zRepeat:2.0, zRange:378, hikModel:"MV-DP3580-03P V2.0", hikSeries:"DP3000", xResolution:"62.5-166", scanRate:"2.5-56", note:"LVM2500" },
+    { brand:"翌视", model:"LVM2706", xRange:14.8, zRepeat:0.1, zRange:3.5, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"3.9-4.2", scanRate:"1.2-10", note:"LVM2700" },
+    { brand:"翌视", model:"LVM2710", xRange:24, zRepeat:0.15, zRange:5.8, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"5.1-5.9", scanRate:"1.2-10", note:"LVM2700" },
+    { brand:"翌视", model:"LVM2730", xRange:55.8, zRepeat:0.4, zRange:18.4, hikModel:"MV-DP4090-01P", hikSeries:"DP4000", xResolution:"11.1-13.6", scanRate:"1.2-10", note:"LVM2700" },
+    { brand:"翌视", model:"LVM2740", xRange:89, zRepeat:0.5, zRange:38.3, hikModel:"MV-DP4090-01P", hikSeries:"DP4000", xResolution:"16.6-21.7", scanRate:"1.2-10", note:"LVM2700" },
+    { brand:"翌视", model:"LVM2750", xRange:126.5, zRepeat:1.0, zRange:58.3, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"23.1-30.9", scanRate:"1.2-10", note:"LVM2700" },
+    { brand:"翌视", model:"LVM2770", xRange:735.4, zRepeat:3.0, zRange:673.2, hikModel:"MV-DP4940-03P", hikSeries:"DP4000", xResolution:"77.9-179.5", scanRate:"1.2-10", note:"LVM2700" },
+    { brand:"翌视", model:"LVM3020", xRange:36, zRepeat:0.5, zRange:22, hikModel:"MV-DP2060-01P V2.0", hikSeries:"DP2000", xResolution:"10", scanRate:"0.6-10", note:"LVM3000" },
+    { brand:"翌视", model:"LVM3028", xRange:62, zRepeat:1.0, zRange:13, hikModel:"MV-DP2080-01P V2.0", hikSeries:"DP2000", xResolution:"20", scanRate:"0.25-10", note:"LVM3000" },
+    { brand:"翌视", model:"LVM3029", xRange:98, zRepeat:2.4, zRange:25, hikModel:"MV-DP2140-01P V2.0", hikSeries:"DP2000", xResolution:"30", scanRate:"0.25-10", note:"LVM3000" },
+    { brand:"翌视", model:"LVM3030", xRange:97, zRepeat:1.6, zRange:80, hikModel:"MV-DP2120-01P V2.0", hikSeries:"DP2000", xResolution:"30", scanRate:"0.6-10", note:"LVM3000" },
+    { brand:"翌视", model:"LVM3039", xRange:154, zRepeat:3.0, zRange:37, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"48", scanRate:"0.25-10", note:"LVM3000" },
+    { brand:"翌视", model:"LVM3040", xRange:204, zRepeat:3.0, zRange:175, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"64", scanRate:"0.6-10", note:"LVM3000" },
+    { brand:"翌视", model:"LVM3050", xRange:416, zRepeat:10, zRange:457, hikModel:"MV-DP2470-01P V2.0", hikSeries:"DP2000", xResolution:"120", scanRate:"0.6-10", note:"LVM3000" },];
+  const PH={}; PRODUCT_DB.forEach(p=>{PH[p.model]=p});
+  const BN={Keyence:'基恩士',LMI:'LMI',SSZN:'深视智能',Photon:'光子',Sick:'西克',Huaray:'华睿',Meca:'梅卡','翌视':'翌视'};
+
+  function zAtSize(m,ps){
+    var zmin,zmax;var m2=m.zRes.match(/^([\d.]+)~([\d.]+)$/);if(m2){zmin=parseFloat(m2[1]);zmax=parseFloat(m2[2])}else{var m3=m.zRes.match(/^([\d.]+)mm/);if(m3){zmin=zmax=parseFloat(m3[1])*1000}else return{min:999,max:999,display:'N/A'}}
+    var r=(ps-m.xNear)/(m.xFar-m.xNear);r=Math.max(0,Math.min(1,r));var zr=zmin+(zmax-zmin)*r;
+    return{min:Math.round(zr*20)/10,max:Math.round(zr*50)/10,display:Math.round(zr*20)/10+'~'+Math.round(zr*50)/10};
+  }
+
+  function mm(m,q){var ml=m.toLowerCase();if(ml.includes(q))return true;var c=ml.replace(/[^a-z0-9]/g,'');if(c.includes(q))return true;var qi=0;for(var ti=0;ti<c.length&&qi<q.length;ti++){if(c[ti]===q[qi])qi++}return qi===q.length}
+  function fc(b,m){if(!m)return[];var q=m.toLowerCase().trim();if(b){var bb=b.toLowerCase().trim();return COMPETITOR_DB.filter(function(c){return c.brand.toLowerCase().includes(bb)&&mm(c.model,q)})}return COMPETITOR_DB.filter(function(c){return mm(c.model,q)})}
+  function o1(m){return m.indexOf('-01P')>=0}
+  function d2(m){return m.indexOf('MV-DP2')===0}
+  function d3(m){return m.indexOf('MV-DP3')===0}
+  function d4(s){return s==='DP4000'}
+
+  function showCompResult(matches,bh){
+    var h='';
+    if(matches.length){
+      h+='<div class="result-header">匹配到 <strong>'+matches.length+'</strong> 条记录'+(bh?'':' (全品牌搜索)')+'</div>';
+      matches.forEach(function(c){
+        var bn=BN[c.brand]||c.brand;var hp=PH[c.hikModel]||{};
+        h+='<div class="comp-compare-box"><div class="vs-row">';
+        h+='<div class="vs-col left"><div class="vs-label">友商型号</div><div class="vs-model">'+bn+' '+c.model+'</div><div class="vs-specs">X轴视野: ≈'+c.xRange+'mm | Z景深: '+c.zRange+'mm<br>扫描帧率: '+(c.scanRate||'-')+'KHz | X轴分辨率: '+(c.xResolution||'-')+'μm<br>Z重复精度: '+c.zRepeat+'μm</div></div>';
+        h+='<div class="vs-divider">→</div>';
+        h+='<div class="vs-col right"><div class="vs-label">海康对标型号</div><div class="vs-hik-model">'+c.hikModel+'</div><div class="vs-specs">X轴视野: '+(hp.xFar||'-')+'mm | Z景深: '+(hp.zRange||'-')+'mm<br>扫描帧率: '+(hp.maxFreq||'-')+'KHz | Z分辨率: '+(hp.zRes||'-')+'<br>Z重复精度(估算): '+(hp.zRepeatDisplay||'-')+' μm | 激光波长: '+(hp.light||'-')+'</div></div>';
+        h+='</div></div>';
+      });
+    }else{h='<div class="warning-badge" style="margin:1rem;">⚠️ 未匹配到型号'+(bh?' (品牌: '+bh+')':' (已搜索全部品牌)')+'</div>'}
+    document.getElementById('resultArea').innerHTML=h;
+  }
+
+  function showSelectionResult(rru,ps,zr){
+    var tol=1.3;var tierA=[],tierB=[];
+    PRODUCT_DB.forEach(function(m){
+      if(!o1(m.model))return;
+      if(zr>0&&m.zRange<zr)return;
+      var zz=zAtSize(m,ps);if(zz.min>rru*tol)return;
+      var xOk=m.xFar>=ps;
+      var c={model:m,zz:zz,xOk:xOk,series:m.series,mf:m.maxFreq};
+      if(xOk)tierA.push(c);else tierB.push(c);
+    });
+    tierA.sort(function(a,b){var d=a.zz.min-b.zz.min;if(d!==0)return d;d=b.model.zRange-a.model.zRange;if(d!==0)return d;return b.model.xFar-a.model.xFar});
+    tierB.sort(function(a,b){var ca=Math.ceil(ps/a.model.xFar);var cb=Math.ceil(ps/b.model.xFar);if(ca!==cb)return ca-cb;return a.zz.min-b.zz.min});
+
+    var top=[],seen={},label=function(c,tag){top.push({c:c,tag:tag});seen[c.model.model]=true};
+    // Collect DP2000/DP3000/DP4000 from ANY tier
+    var allCands=tierA.concat(tierB);
+    var d2all=allCands.filter(function(c){return d2(c.model.model)});
+    var d3all=allCands.filter(function(c){return d3(c.model.model)});
+    var d4all=allCands.filter(function(c){return d4(c.series)});
+    // #1 DP2000, #2 DP3000 (from any tier)
+    if(d2all.length)label(d2all[0],'');
+    if(d3all.length)label(d3all[0],'');
+    // Remaining DP2000/DP3000
+    for(var i=0;i<d2all.length;i++){if(top.length>=5)break;if(!seen[d2all[i].model.model])label(d2all[i],'')}
+    for(var i=0;i<d3all.length;i++){if(top.length>=5)break;if(!seen[d3all[i].model.model])label(d3all[i],'')}
+    // DP4000: at most 1
+    if(d4all.length&&top.length<5)label(d4all[0],'');
+    // Remaining from tierA+B (non-DP2/3/4)
+    allCands.forEach(function(c){if(top.length>=5)return;if(!seen[c.model.model]&&!d2(c.model.model)&&!d3(c.model.model)&&!d4(c.series))label(c,'多相机拼接满足精度')});
+
+    var h='<div class="result-header">🎯 重复精度需求: <strong>'+Math.round(rru)+'μm</strong> | 产品尺寸: <strong>'+ps+'mm</strong>'+(zr>0?' | Z景深: <strong>'+zr+'mm</strong>':'')+' | 容忍: ±30%</div>';
+    if(!top.length){h+='<div class="warning-badge">⚠️ 无满足条件的型号<br><span style="font-size:.7rem">景深≥'+zr+'mm, zRepeat@'+ps+'mm ≤'+Math.round(rru*tol)+'μm</span></div>'}
+    else{
+      h+='<div class="model-list">';
+      top.forEach(function(it,i){
+        var m=it.c.model;var zz=it.c.zz;var xOk=it.c.xOk;
+        var pl='';if(zz.min<=rru*0.7)pl='精度远优于需求';else if(zz.min<=rru)pl='精度满足需求';else if(zz.min<=rru*tol)pl='精度接近需求';
+        var tags=[];
+        if(it.tag)tags.push('<span class="tag '+(it.tag.indexOf('快')>=0?'speed':(it.tag.indexOf('高')>=0?'purple':''))+'">'+it.tag+'</span>');
+        if(pl)tags.push('<span class="tag '+(pl.indexOf('远优')>=0||pl.indexOf('满足')>=0?'green':'')+'">'+pl+'</span>');
+        if(m.note)tags.push('<span class="tag orange">'+m.note+'</span>');
+        var serTag='';
+        if(m.series==='DP3000')serTag='<span class="tag series speed">DP3000 速度快一倍</span>';
+        else if(m.series==='DP2000')serTag='<span class="tag series">DP2000 性价比最优</span>';
+        else if(m.series==='DP4000')serTag='<span class="tag series purple">DP4000 更高精度</span>';
+        var stitchHTML='';
+        if(!xOk){var n=Math.ceil(ps/m.xFar);stitchHTML='<div class="stitch-info">📌 拼接: '+n+'台 '+m.model+' | X轴 '+m.xFar+'mm × '+n+' = '+m.xFar*n+'mm ≥ '+ps+'mm | 单台zRepeat@'+ps+'mm: '+zz.display+' μm</div>'}
+        h+='<div class="rec-card'+(i<2?' top':'')+'"><div class="rank">#'+(i+1)+'</div><div class="info"><div class="name">'+m.model+' '+serTag+' '+tags.join('')+'</div>';
+        h+='<div class="specs">z重复精度@'+ps+'mm: <strong>'+zz.display+' μm</strong> (全量程: '+m.zRepeatDisplay+' μm) | X轴: '+m.xNear+'~'+m.xFar+'mm | Z景深: '+m.zRange+'mm | '+m.light+' | '+m.maxFreq+'KHz</div>';
+        h+=stitchHTML+'</div></div>';
+      });
+      h+='</div>';
+    }
+    document.getElementById('resultArea').innerHTML=h;
+  }
+
+  document.getElementById('runBtn').addEventListener('click',function(){
+    var rr=parseFloat(document.getElementById('reqRepeatability').value);
+    var ps=parseFloat(document.getElementById('productSize').value);
+    var zr=parseFloat(document.getElementById('reqZRange').value)||0;
+    if(isNaN(rr)||isNaN(ps)||rr<=0||ps<=0){document.getElementById('resultArea').innerHTML='<div class="warning-badge">⚠️ 请填写重复性精度需求和产品短边尺寸</div>';return}
+    showSelectionResult(rr*1000,ps,zr);
+  });
+
+  document.getElementById('compOnlyBtn').addEventListener('click',function(){
+    var cb=document.getElementById('competitorBrand').value;
+    var cm=document.getElementById('competitorModel').value.trim();
+    if(!cm){document.getElementById('resultArea').innerHTML='<div class="warning-badge">⚠️ 请输入友商型号</div>';return}
+    showCompResult(fc(cb,cm),cb);
+  });
+})();
+</script>
+</body>
+</html>
