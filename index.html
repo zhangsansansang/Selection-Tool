@@ -50,7 +50,7 @@
     .comp-compare-box .vs-model{font-size:.8rem;font-weight:800;color:#1f2c38}
     .comp-compare-box .vs-hik-model{font-size:1rem;font-weight:800;color:#f76504}
     .comp-compare-box .vs-specs{font-size:.6rem;color:#5d6f7e;margin-top:.2rem;line-height:1.7}
-    .comp-compare-box .vs-divider{display:flex;align-items:center;font-size:1.5rem;font-weight:800;color:#4caf50}
+    .comp-compare-box .vs-divider{display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;color:#4caf50}.comp-compare-box .vs-divider::after{content:"→"}
     .stitch-info{background:#e3f2fd;border:1px solid #2196f3;border-radius:12px;padding:.4rem .6rem;margin-top:.3rem;font-size:.65rem;color:#1565c0}
     .warning-badge{background:#fff3e0;color:#f76504;padding:.5rem 1rem;border-radius:40px;font-size:.75rem;font-weight:600;text-align:center}
     .model-list{max-height:60vh;overflow-y:auto;padding-right:.3rem}
@@ -63,7 +63,7 @@
       .left-panel,.right-panel{width:100%}
       .compact-grid{grid-template-columns:1fr;gap:.8rem}
       .comp-compare-box .vs-row{flex-direction:column}
-      .comp-compare-box .vs-divider{font-size:1.2rem;padding:.2rem 0}
+      .comp-compare-box .vs-divider::after{content:"↓"}
     }
   </style>
 </head>
@@ -345,7 +345,7 @@
         var bn=BN[c.brand]||c.brand;var hp=PH[c.hikModel]||{};
         h+='<div class="comp-compare-box"><div class="vs-row">';
         h+='<div class="vs-col left"><div class="vs-label">友商型号</div><div class="vs-model">'+bn+' '+c.model+'</div><div class="vs-specs">X轴视野: ≈'+c.xRange+'mm | Z景深: '+c.zRange+'mm<br>扫描帧率: '+(c.scanRate||'-')+'KHz | X轴分辨率: '+(c.xResolution||'-')+'μm<br>Z重复精度: '+c.zRepeat+'μm</div></div>';
-        h+='<div class="vs-divider">↓</div>';
+        h+='<div class="vs-divider"></div>';
         h+='<div class="vs-col right"><div class="vs-label">海康对标型号</div><div class="vs-hik-model">'+c.hikModel+'</div><div class="vs-specs">X轴视野: '+(hp.xFar||'-')+'mm | Z景深: '+(hp.zRange||'-')+'mm<br>扫描帧率: '+(hp.maxFreq||'-')+'KHz | Z分辨率: '+(hp.zRes||'-')+'<br>Z重复精度(估算): '+(hp.zRepeatDisplay||'-')+' μm | 激光波长: '+(hp.light||'-')+'</div></div>';
         h+='</div></div>';
       });
