@@ -1,11 +1,20 @@
-# Python build scripts
-*.py
+# Python build scripts (historical, one-time use)
+build_comp.py
+extract_new_data.py
+gen_all_comp.py
 
 # Source data files
 *.pdf
 *.xlsx
 *.rar
-*.txt
+comp_db_new.txt
+extracted_data.txt
+all_comp_entries.txt
+filelist.txt
+
+# Temp / backup
+*.bak
+__pycache__/
 
 # Temp/build files
 rebuild_output*

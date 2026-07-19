@@ -89,7 +89,7 @@
       <div class="card">
         <div class="card-header">🔄 竞品对标（选填）</div>
         <div class="compact-grid">
-          <div><label>友商品牌</label><select id="competitorBrand"><option value="">-- 不限 --</option><option value="Keyence">基恩士 Keyence</option><option value="LMI">LMI Gocator</option><option value="SSZN">深视智能 SSZN</option><option value="翌视">翌视</option><option value="Photon">光子 Photon</option><option value="Sick">西克 Sick</option><option value="Huaray">华睿 Huaray</option><option value="Meca">梅卡 Meca</option><option value="Elsen">埃尔森 Elsen</option></select></div>
+          <div><label>友商品牌</label><select id="competitorBrand"><option value="">-- 不限 --</option><option value="Keyence">基恩士 Keyence</option><option value="LMI">LMI Gocator</option><option value="SSZN">深视智能 SSZN</option><option value="翌视">翌视</option><option value="Photon">光子 Photon</option><option value="Sick">西克 Sick</option><option value="Huaray">华睿 Huaray</option><option value="Meca">梅卡 Meca</option><option value="Elsen">埃尔森 Elsen</option><option value="OPT">奥普特 OPT</option></select></div>
           <div><label>友商型号</label><input type="text" id="competitorModel" value="" placeholder="如 LJ-X8080"></div>
         </div>
         <button class="btn-outline" id="compOnlyBtn">🔍 竞品对标查询</button>
@@ -372,9 +372,47 @@
     { brand:"翌视", model:"LVM3735", xRange:128, zRepeat:1, zRange:53, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"20", scanRate:"1.8-10", note:"LVM3700", },
     { brand:"翌视", model:"LVM3740", xRange:200, zRepeat:2, zRange:88, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"30", scanRate:"2-10", note:"LVM3700", },
     { brand:"翌视", model:"LVM3750", xRange:443, zRepeat:8, zRange:321, hikModel:"MV-DP4430-01P", hikSeries:"DP4000", xResolution:"65", scanRate:"2-10", note:"LVM3700", },
-    { brand:"翌视", model:"LVM3950", xRange:436, zRepeat:10, zRange:330, hikModel:"MV-DP4430-01P", hikSeries:"DP4000", xResolution:"105", scanRate:"7-40", note:"LVM3900", },];
+    { brand:"翌视", model:"LVM3950", xRange:436, zRepeat:10, zRange:330, hikModel:"MV-DP4430-01P", hikSeries:"DP4000", xResolution:"105", scanRate:"7-40", note:"LVM3900", },
+    { brand:"LMI", model:"G2715", xRange:16, zRepeat:0.2, zRange:14, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"5.0~5.2", scanRate:"1.65~20kHz", note:"LMI2700" },
+    { brand:"LMI", model:"G2710", xRange:10, zRepeat:0.15, zRange:8, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"3~4", scanRate:"1.65~20kHz", note:"LMI2700" },
+    { brand:"LMI", model:"G2720", xRange:32, zRepeat:0.4, zRange:25, hikModel:"MV-DP3050-01P V2.0", hikSeries:"DP3000", xResolution:"8~12", scanRate:"1.65~20kHz", note:"LMI2700" },
+    { brand:"LMI", model:"G4011", xRange:1.2, zRepeat:0.05, zRange:5, hikModel:"", hikSeries:"NotLineLaser", xResolution:"1.9", scanRate:"~36kHz", note:"LMI4000" },
+    { brand:"LMI", model:"G4021", xRange:5, zRepeat:0.1, zRange:5, hikModel:"", hikSeries:"NotLineLaser", xResolution:"2.5", scanRate:"~36kHz", note:"LMI4000" },
+    { brand:"LMI", model:"G3510", xRange:50, zRepeat:1, zRange:10, hikModel:"", hikSeries:"NotLineLaser", xResolution:"5MP", scanRate:"~6Hz", note:"LMI3500" },
+    { brand:"LMI", model:"G3520", xRange:282, zRepeat:5, zRange:30, hikModel:"", hikSeries:"NotLineLaser", xResolution:"5MP", scanRate:"~6Hz", note:"LMI3500" },
+    { brand:"SSZN", model:"SRI9022", xRange:13, zRepeat:0.1, zRange:8, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"2μm", scanRate:"0.62~13kHz", note:"SRI9000" },
+    { brand:"SSZN", model:"SRI72800", xRange:2800, zRepeat:100, zRange:1500, hikModel:"MV-DP2900-03P V2.0", hikSeries:"DP2000", xResolution:"500μm", scanRate:"1.5~20kHz", note:"SRI7000" },
+    { brand:"Huaray", model:"DL3080B-H-S1", xRange:12.5, zRepeat:0.2, zRange:15, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"5~7", scanRate:"3.3~49kHz", note:"DL3000高速" },
+    { brand:"Huaray", model:"DL3160B-H-S1", xRange:26.9, zRepeat:0.4, zRange:26.2, hikModel:"MV-DP3050-01P V2.0", hikSeries:"DP3000", xResolution:"10~15", scanRate:"3.3~49kHz", note:"DL3000高速" },
+    { brand:"Huaray", model:"DL3200R-H-S1", xRange:52.5, zRepeat:0.5, zRange:71.5, hikModel:"MV-DP3061-01P V2.0", hikSeries:"DP3000", xResolution:"20~30", scanRate:"3.3~49kHz", note:"DL3000高速" },
+    { brand:"Huaray", model:"DL3400R-H-S1", xRange:300, zRepeat:15, zRange:722.7, hikModel:"MV-DP3300-01P V2.0", hikSeries:"DP3000", xResolution:"150~300", scanRate:"3.3~49kHz", note:"DL3000高速" },
+    { brand:"Huaray", model:"DL5020B-H", xRange:6.9, zRepeat:0.2, zRange:6.5, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"3~5", scanRate:"2.5~56kHz", note:"DL5000高速" },
+    { brand:"Huaray", model:"DL5040B-H", xRange:24, zRepeat:0.4, zRange:24, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"8~12", scanRate:"2.5~56kHz", note:"DL5000高速" },
+    { brand:"Photon", model:"GL-8060D", xRange:31.5, zRepeat:0.4, zRange:22, hikModel:"MV-DP4060-01P", hikSeries:"DP4000", xResolution:"6~10", scanRate:"3.95~49kHz", note:"GL8000" },
+    { brand:"Photon", model:"GL-8160D", xRange:90, zRepeat:1, zRange:82, hikModel:"MV-DP4090-01P", hikSeries:"DP4000", xResolution:"15~30", scanRate:"3.95~49kHz", note:"GL8000" },
+    { brand:"翌视", model:"LVM2512CA", xRange:15.7, zRepeat:0.2, zRange:6.8, hikModel:"MV-DP3020-01P V2.0", hikSeries:"DP3000", xResolution:"5~8", scanRate:"2.5~56kHz", note:"LVM2500" },
+    { brand:"OPT", model:"OPT-LPE2-025-01", xRange:158.5, zRepeat:1, zRange:157, hikModel:"MV-DP2240-01P V2.0", hikSeries:"DP2000", xResolution:"41~63", scanRate:"2~18kHz", note:"LPE2" },
+    { brand:"OPT", model:"OPT-LPE2-050-01", xRange:50, zRepeat:0.5, zRange:30, hikModel:"MV-DP2061-01P V2.0", hikSeries:"DP2000", xResolution:"15~25", scanRate:"2~18kHz", note:"LPE2" },
+    { brand:"OPT", model:"OPT-LPE2-100-01", xRange:100, zRepeat:0.8, zRange:60, hikModel:"MV-DP2140-01P V2.0", hikSeries:"DP2000", xResolution:"25~35", scanRate:"2~18kHz", note:"LPE2" },
+    { brand:"OPT", model:"OPT-LPD2-025-01", xRange:25, zRepeat:0.5, zRange:20, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"5~8", scanRate:"2~49kHz", note:"LPD2" },
+    { brand:"OPT", model:"OPT-LPD2-050-01", xRange:50, zRepeat:0.8, zRange:30, hikModel:"MV-DP4090-01P", hikSeries:"DP4000", xResolution:"10~15", scanRate:"2~49kHz", note:"LPD2" },
+    { brand:"OPT", model:"OPT-LPD2-100-01", xRange:100, zRepeat:1.5, zRange:60, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"20~30", scanRate:"2~49kHz", note:"LPD2" },
+    { brand:"OPT", model:"OPT-LPD1-025-01", xRange:25, zRepeat:0.8, zRange:20, hikModel:"MV-DP2062-01P V2.0", hikSeries:"DP2000", xResolution:"8~12", scanRate:"1~10kHz", note:"LPD1" },
+
+    { brand:"OPT", model:"OPT-LPF2-006-01", xRange:32, zRepeat:0.2, zRange:19.7, hikModel:"MV-DP4060-01P", hikSeries:"DP4000", xResolution:"11", scanRate:"3~18kHz", note:"LPF2" },
+    { brand:"OPT", model:"OPT-LPF2-018-01", xRange:95, zRepeat:0.5, zRange:86.8, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"25~36", scanRate:"3~18kHz", note:"LPF2" },
+    { brand:"OPT", model:"OPT-LPF2-030", xRange:140, zRepeat:1, zRange:174.6, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"60", scanRate:"3~18kHz", note:"LPF2" },
+    { brand:"OPT", model:"OPT-LPF2-050", xRange:250, zRepeat:5, zRange:429.9, hikModel:"MV-DP4430-01P", hikSeries:"DP4000", xResolution:"120", scanRate:"3~18kHz", note:"LPF2" },
+    { brand:"OPT", model:"OPT-LPH2-020", xRange:20, zRepeat:0.1, zRange:10, hikModel:"MV-DP4020-01P", hikSeries:"DP4000", xResolution:"3~5", scanRate:"~54kHz", note:"LPH2" },
+    { brand:"OPT", model:"OPT-LPH2-100", xRange:100, zRepeat:1, zRange:50, hikModel:"MV-DP4180-01P", hikSeries:"DP4000", xResolution:"15~25", scanRate:"~54kHz", note:"LPH2" },
+    { brand:"OPT", model:"OPT-LPH2-500", xRange:500, zRepeat:5, zRange:300, hikModel:"MV-DP4430-01P", hikSeries:"DP4000", xResolution:"80~120", scanRate:"~54kHz", note:"LPH2" },
+    { brand:"OPT", model:"OPT-FPB1-008", xRange:20, zRepeat:0.06, zRange:3, hikModel:"", hikSeries:"NotLineLaser", xResolution:"5MP", scanRate:"2FPS", note:"FPB1" },
+    { brand:"OPT", model:"OPT-FPB1-010-02", xRange:42, zRepeat:4, zRange:10, hikModel:"", hikSeries:"NotLineLaser", xResolution:"5MP", scanRate:"2FPS", note:"FPB1" },
+    { brand:"OPT", model:"OPT-FPC1-300", xRange:100, zRepeat:5, zRange:30, hikModel:"", hikSeries:"NotLineLaser", xResolution:"3MP", scanRate:"~2Hz", note:"FPC1" },
+    { brand:"OPT", model:"OPT-LSA1-3500", xRange:3400, zRepeat:100, zRange:2000, hikModel:"", hikSeries:"NotLineLaser", xResolution:"RGBD", scanRate:"20FPS", note:"LSA1" },
+];
   const PH={}; PRODUCT_DB.forEach(p=>{PH[p.model]=p});
-  const BN={Keyence:'基恩士',LMI:'LMI',SSZN:'深视智能',Photon:'光子',Sick:'西克',Huaray:'华睿',Meca:'梅卡','翌视':'翌视',Elsen:'埃尔森'};
+  const BN={Keyence:'基恩士',LMI:'LMI',SSZN:'深视智能',Photon:'光子',Sick:'西克',Huaray:'华睿',Meca:'梅卡','翌视':'翌视',Elsen:'埃尔森',OPT:'奥普特'};
 
   function zAtSize(m,ps){
     var zmin,zmax;var m2=m.zRes.match(/^([\d.]+)~([\d.]+)$/);if(m2){zmin=parseFloat(m2[1]);zmax=parseFloat(m2[2])}else{var m3=m.zRes.match(/^([\d.]+)mm/);if(m3){zmin=zmax=parseFloat(m3[1])*1000}else return{min:999,max:999,display:'N/A'}}
@@ -411,8 +449,11 @@
         h+='<div class="vs-divider"></div>';
         // Right: Hik specs
         h+='<div class="vs-col right"><div class="vs-label">海康对标型号</div>';
+        var isNotLineLaser=(c.hikSeries||'')==='NotLineLaser';
         if(noHik){
           h+='<div class="vs-hik-model" style="color:#999">暂无对标型号</div><div class="vs-specs" style="color:#999">该竞品暂无直接对标的海康型号</div>';
+        } else if(isNotLineLaser){
+          h+='<div class="vs-hik-model" style="color:#999">非线激光产品</div><div class="vs-specs" style="color:#999">该产品为线共焦/结构光/快照式传感器，海康暂无线激光对标型号</div>';
         } else if(isStructured){
           h+='<div class="vs-hik-model">'+c.hikModel+'</div><div class="vs-specs">图像分辨率: '+(hp.points?hp.points+'像素':'N/A')+' | 帧率: '+(hp.maxFreq||'-')+'FPS<br>Z重复精度: '+(hp.zRepeatDisplay||'-')+'μm | Z测量范围: ±'+(hp.zRange||'-')+'mm<br>参考距离: '+(hp.cd||'-')+'mm | Z分辨率: '+(hp.zRes||'-')+'<br>光源: '+(hp.light||'-')+' | '+(hp.note||'').replace(/,/g,'<br>')+'</div>';
         } else {
