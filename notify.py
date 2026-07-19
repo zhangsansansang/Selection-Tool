@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """
 竞品更新通知模块
-支持渠道: 飞书机器人 / 企业微信机器人 / 钉钉机器人 / 邮件
+支持渠道:
+  免费/个人可用: Server酱(微信) / PushPlus(微信) / Telegram Bot
+  企业版: 飞书机器人 / 企业微信机器人 / 钉钉机器人 / 邮件
 用法:
-  python notify.py --feishu https://open.feishu.cn/open-apis/bot/v2/hook/xxx --report report.md
-  python notify.py --wecom https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx --json result.json
+  python notify.py --server-chan SCT123456... --title "发现新型号" --message "..."
+  python notify.py --pushplus token123 --title "发现新型号" --message "..."
+  python notify.py --feishu https://open.feishu.cn/open-apis/bot/v2/hook/xxx --message "..."
 """
 
 import json
@@ -17,7 +20,112 @@ from datetime import datetime
 
 
 # ============================================================
-# 飞书机器人通知
+# Server酱 (微信推送) — 免费, 个人可用, 无需企业认证
+# 注册: https://sct.ftqq.com → 获取 SendKey
+# ============================================================
+
+def send_server_chan(send_key, title, content_lines):
+    """通过 Server酱 推送到微信"""
+    try:
+        import urllib.request
+    except ImportError:
+        return False
+
+    content = "\n".join(content_lines)
+    payload = json.dumps({
+        "title": title,
+        "desp": content.replace("\n", "\n\n"),
+    }).encode("utf-8")
+
+    url = f"https://sctapi.ftqq.com/{send_key}.send"
+    try:
+        req = urllib.request.Request(
+            url, data=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            result = json.loads(resp.read())
+            if result.get("code") == 0:
+                return True
+            print(f"[Server酱] 发送失败: {result.get('message', 'unknown')}")
+            return False
+    except Exception as e:
+        print(f"[Server酱] 发送异常: {e}")
+        return False
+
+
+# ============================================================
+# PushPlus (微信推送) — 免费, 个人可用
+# 注册: https://www.pushplus.plus → 获取 Token
+# ============================================================
+
+def send_pushplus(token, title, content_lines):
+    """通过 PushPlus 推送到微信"""
+    try:
+        import urllib.request
+    except ImportError:
+        return False
+
+    content = "\n".join(content_lines)
+    payload = json.dumps({
+        "token": token,
+        "title": title,
+        "content": content.replace("\n", "<br>"),
+        "template": "txt",
+    }).encode("utf-8")
+
+    url = "https://www.pushplus.plus/send"
+    try:
+        req = urllib.request.Request(
+            url, data=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            result = json.loads(resp.read())
+            if result.get("code") == 200:
+                return True
+            print(f"[PushPlus] 发送失败: {result.get('msg', 'unknown')}")
+            return False
+    except Exception as e:
+        print(f"[PushPlus] 发送异常: {e}")
+        return False
+
+
+# ============================================================
+# Telegram Bot — 免费
+# 创建: @BotFather → 获取 token → 获取 chat_id
+# ============================================================
+
+def send_telegram(bot_token, chat_id, title, content_lines):
+    """通过 Telegram Bot 发送通知"""
+    try:
+        import urllib.request
+    except ImportError:
+        return False
+
+    text = f"*{title}*\n\n" + "\n".join(content_lines[:30])
+    payload = json.dumps({
+        "chat_id": chat_id,
+        "text": text,
+        "parse_mode": "Markdown",
+    }).encode("utf-8")
+
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    try:
+        req = urllib.request.Request(
+            url, data=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            result = json.loads(resp.read())
+            return result.get("ok", False)
+    except Exception as e:
+        print(f"[Telegram] 发送异常: {e}")
+        return False
+
+
+# ============================================================
+# 飞书机器人通知 (需企业管理员权限)
 # ============================================================
 
 def send_feishu(webhook_url, title, content_lines):
@@ -210,6 +318,19 @@ def dispatch_notifications(config, notification_content):
     title = f"轮廓仪竞品更新: {len(notification_content) - 1} 条新发现"
     results = {}
 
+    if config.get("server_chan_key"):
+        ok = send_server_chan(config["server_chan_key"], title, notification_content)
+        results["server_chan"] = "ok" if ok else "failed"
+
+    if config.get("pushplus_token"):
+        ok = send_pushplus(config["pushplus_token"], title, notification_content)
+        results["pushplus"] = "ok" if ok else "failed"
+
+    if config.get("telegram_token") and config.get("telegram_chat_id"):
+        ok = send_telegram(config["telegram_token"], config["telegram_chat_id"],
+                          title, notification_content)
+        results["telegram"] = "ok" if ok else "failed"
+
     if config.get("feishu_webhook"):
         ok = send_feishu(config["feishu_webhook"], title, notification_content)
         results["feishu"] = "ok" if ok else "failed"
@@ -244,6 +365,10 @@ def dispatch_notifications(config, notification_content):
 
 def main():
     parser = argparse.ArgumentParser(description="竞品更新通知分发")
+    parser.add_argument("--server-chan", help="Server酱 SendKey (微信推送, 免费)")
+    parser.add_argument("--pushplus", help="PushPlus Token (微信推送, 免费)")
+    parser.add_argument("--telegram", help="Telegram Bot Token")
+    parser.add_argument("--telegram-chat-id", help="Telegram Chat ID")
     parser.add_argument("--feishu", help="飞书 Webhook URL")
     parser.add_argument("--wecom", help="企业微信 Webhook URL")
     parser.add_argument("--dingtalk", help="钉钉 Webhook URL")
@@ -282,6 +407,13 @@ def main():
         return
 
     config = {}
+    if args.server_chan:
+        config["server_chan_key"] = args.server_chan
+    if args.pushplus:
+        config["pushplus_token"] = args.pushplus
+    if args.telegram:
+        config["telegram_token"] = args.telegram
+        config["telegram_chat_id"] = args.telegram_chat_id or ""
     if args.feishu:
         config["feishu_webhook"] = args.feishu
     if args.wecom:

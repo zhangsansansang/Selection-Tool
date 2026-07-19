@@ -59,29 +59,21 @@ jobs:
           git push origin HEAD:main
           echo "Committed and pushed to main"
 
-      # ============ 飞书通知 ============
-      - name: 飞书通知
-        if: steps.check.outputs.changed == 'true' && env.FEISHU_WEBHOOK != ''
+      # ============ 通知分发 (多渠道) ============
+      - name: 发送通知
+        if: steps.check.outputs.changed == 'true'
         env:
+          SERVER_CHAN_KEY: ${{ secrets.SERVER_CHAN_KEY }}
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
-        run: |
-          if [ -n "$FEISHU_WEBHOOK" ]; then
-            python notify.py --feishu "$FEISHU_WEBHOOK" \
-              --title "轮廓仪竞品数据库已自动更新" \
-              --message "分支: main\n时间: $(date '+%Y-%m-%d %H:%M')\n详情见 commit log"
-          fi
-
-      # ============ 企业微信通知 (备选) ============
-      - name: 企业微信通知
-        if: steps.check.outputs.changed == 'true' && env.WECOM_WEBHOOK != ''
-        env:
           WECOM_WEBHOOK: ${{ secrets.WECOM_WEBHOOK }}
         run: |
-          if [ -n "$WECOM_WEBHOOK" ]; then
-            python notify.py --wecom "$WECOM_WEBHOOK" \
-              --title "轮廓仪竞品数据库已自动更新" \
-              --message "时间: $(date '+%Y-%m-%d %H:%M')"
-          fi
+          MSG="轮廓仪竞品DB已自动更新\n时间: $(date '+%Y-%m-%d %H:%M')\n查看: https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+
+          [ -n "$SERVER_CHAN_KEY" ] && python notify.py --server-chan "$SERVER_CHAN_KEY" --title "海康轮廓仪-竞品更新" --message "$MSG"
+          [ -n "$PUSHPLUS_TOKEN" ] && python notify.py --pushplus "$PUSHPLUS_TOKEN" --title "海康轮廓仪-竞品更新" --message "$MSG"
+          [ -n "$FEISHU_WEBHOOK" ] && python notify.py --feishu "$FEISHU_WEBHOOK" --title "海康轮廓仪-竞品更新" --message "$MSG"
+          [ -n "$WECOM_WEBHOOK" ] && python notify.py --wecom "$WECOM_WEBHOOK" --title "海康轮廓仪-竞品更新" --message "$MSG"
 
       - name: 上传报告
         if: always()
