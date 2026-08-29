@@ -83,6 +83,10 @@ SERIES_MAP = {
         "AT-S1000-04B": "DP2000",
         "AT-S1000-07B": "DP2000",
     },
+    "Meca": {
+        "LNX-8000": "DP4000",       # 梅卡曼德 Mech-Eye 4K线激光, 4096点/15kHz
+        "LNX-7500": "DP3000",
+    },
     "LMI": {
         "2100": "Unknown",
         "2300": "DP2000",
@@ -264,7 +268,7 @@ def match_competitor(product_db, brand, comp_series, xRange, zRepeat, zRange=Non
     candidates = [
         m
         for m in product_db
-        if m.get("series") == hik_series and m.get("model", "").endswith("-01P")
+        if m.get("series") == hik_series and "-01P" in m.get("model", "")
     ]
 
     # 如果没有 -01P 型号（如 DP4000），放宽后缀限制

@@ -1,0 +1,9 @@
+[
+  {"brand":"SSZN","series":"SRI8000","model":"SRI8080","xRange":58,"zRepeat":0.4,"zRange":47.5,"xResolution":"20μm","scanRate":"2.3~67kHz","note":"SRI8000"},
+  {"brand":"SSZN","series":"SRI8000","model":"SRI8082","xRange":92,"zRepeat":1.1,"zRange":40,"xResolution":"30μm","scanRate":"5.2~67kHz","note":"SRI8000"},
+  {"brand":"SSZN","series":"SRI8000","model":"SRI8140","xRange":86,"zRepeat":0.5,"zRange":100,"xResolution":"30μm","scanRate":"2.3~67kHz","note":"SRI8000"},
+  {"brand":"SSZN","series":"SRI8000","model":"SRI8240","xRange":142,"zRepeat":1,"zRange":172,"xResolution":"45μm","scanRate":"最高67kHz","note":"SRI8000"},
+  {"brand":"Meca","series":"LNX-8000","model":"LNX-8030","xRange":30,"zRepeat":0.4,"zRange":15,"xResolution":"9μm","scanRate":"3.3~15kHz","note":"LNX-8000"},
+  {"brand":"Meca","series":"LNX-8000","model":"LNX-8080","xRange":80,"zRepeat":1,"zRange":80,"xResolution":"20μm","scanRate":"3.3~15kHz","note":"LNX-8000"},
+  {"brand":"Meca","series":"LNX-8000","model":"LNX-8300","xRange":310,"zRepeat":5,"zRange":300,"xResolution":"105μm","scanRate":"3.3~15kHz","note":"LNX-8000"}
+]
