@@ -106,6 +106,19 @@
     .seg button.on{background:#fef3e8;border-color:#f76504;color:#f76504}
     .upload-box{border:1.5px dashed #e2e8f0;border-radius:16px;padding:1rem;text-align:center;margin-top:.5rem}
     .upload-box input[type=file]{margin:.6rem auto;font-size:.7rem;color:#5d6f7e}
+    .fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#f76504,#e05a00);color:#fff;font-size:1.9rem;font-weight:700;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(247,101,4,0.4);display:flex;align-items:center;justify-content:center;z-index:60;transition:transform .15s;line-height:1}
+    .fab:hover{transform:scale(1.08)}
+    @media(max-width:800px){
+      .page{padding:1rem}
+      .bottom-nav .nav-item{font-size:.55rem;padding:.3rem .25rem}
+      .bottom-nav .nav-ico{font-size:1rem}
+      .fab{bottom:18px;right:18px;width:50px;height:50px;font-size:1.7rem}
+      body{padding:.6rem}
+      .app-window{border-radius:26px}
+      .modal{max-width:94vw;padding:1rem 1.1rem}
+      .detail-actions a{min-width:120px}
+      .seg button{min-width:68px;font-size:.64rem;padding:.45rem .3rem}
+    }
   </style>
 </head>
 <body>
@@ -182,18 +195,10 @@
   </div>
   <div class="page" id="page-docs">
     <div class="page-title">📄 经验文档</div>
-    <div class="page-sub">查看经验文档，或输入管理员暗号上传新文件（word/ppt/pdf）</div>
+    <div class="page-sub">查看经验文档，点右下角 ＋ 上传新文件（word/ppt/pdf）</div>
     <div class="card">
       <div class="card-header" style="border-left:none;padding-left:0">📚 文档列表</div>
       <div id="docList" class="empty-state">加载中...</div>
-    </div>
-    <div class="card">
-      <div class="card-header" style="border-left:none;padding-left:0">📤 上传文档（管理员）</div>
-      <div class="form-section"><label>管理员暗号</label><input type="password" id="adminKey" placeholder="请输入暗号"><button class="btn-outline" id="adminCheckBtn">🔑 验证暗号</button></div>
-      <div id="uploadArea" style="display:none">
-        <div class="form-section"><label>GitHub Token (PAT)</label><input type="password" id="ghToken" placeholder="首次填写后自动记住"><div class="hint">PAT 是 GitHub 访问令牌，用于授权上传。生成方法：GitHub → 右上角头像 → Settings → Developer settings → Personal access tokens → Generate new token，勾选 <strong>repo</strong> 权限。首次上传填一次后会保存在本机浏览器，之后直接上传即可。</div></div>
-        <div class="upload-box"><input type="file" id="docFile"><button class="btn-primary" id="uploadBtn">⬆️ 上传到 GitHub</button><div class="hint" id="uploadMsg"></div></div>
-      </div>
     </div>
   </div>
   </div>
@@ -209,6 +214,17 @@
   <div class="modal">
     <div class="modal-header"><div class="modal-title" id="modalTitle">型号详情</div><button type="button" class="modal-close" id="modalClose">×</button></div>
     <div id="modalBody"></div>
+  </div>
+</div>
+<button type="button" class="fab" id="fabUpload" title="上传文档">＋</button>
+<div class="modal-overlay" id="uploadModalOverlay">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">📤 上传文档（管理员）</div><button type="button" class="modal-close" id="uploadModalClose">×</button></div>
+    <div class="form-section"><label>管理员暗号</label><input type="password" id="adminKey" placeholder="请输入暗号"><button class="btn-outline" id="adminCheckBtn">🔑 验证暗号</button></div>
+    <div id="uploadArea" style="display:none">
+      <div class="form-section"><label>GitHub Token (PAT)</label><input type="password" id="ghToken" placeholder="首次填写后自动记住"><div class="hint">PAT 是 GitHub 访问令牌。生成：GitHub → Settings → Developer settings → Personal access tokens → Generate new token，勾选 <strong>repo</strong> 权限（或 fine-grained token 勾选 <strong>Contents: Read and write</strong>）。首次填一次自动记住。</div></div>
+      <div class="upload-box"><input type="file" id="docFile"><button class="btn-primary" id="uploadBtn">⬆️ 上传到 GitHub</button><div class="hint" id="uploadMsg"></div></div>
+    </div>
   </div>
 </div>
 <script>
@@ -679,9 +695,10 @@
       ['类别/备注',(m.category||'-')+(m.note?' / '+m.note:'')]
     ];
     var t='<table class="spec-table">'+rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'}).join('')+'</table>';
-    var detailUrl=(window.DOWNLOAD_MAP&&window.DOWNLOAD_MAP[model])||window.DOWNLOAD_FALLBACK;
+    var kw=model.replace(/ V\d+(\.\d+)?$/,'');
+    var detailUrl=(window.DOWNLOAD_MAP&&window.DOWNLOAD_MAP[model])||('https://www.hikrobotics.com/cn/search?keyword='+encodeURIComponent(kw)+'&type=-1&page=1');
     t+='<div class="detail-actions"><a class="btn-primary" href="'+detailUrl+'" target="_blank">📄 官网详情 / 下载彩页图纸</a></div>';
-    t+='<div class="hint">若详情页未直接提供下载，请在产品列表页查找该型号的彩页与结构图纸。</div>';
+    t+='<div class="hint">将跳转到海康官网该型号页面（自动带入型号）。若未直接提供下载，请在产品详情页「文件下载」标签查找彩页与结构图纸。</div>';
     document.getElementById('modalBody').innerHTML=t;
     document.getElementById('modalOverlay').classList.add('show');
   }
@@ -711,7 +728,7 @@
       document.getElementById('frNote').textContent=st.model+' | 景深 '+depth+'mm | 视野宽度 '+width+'mm';
       var p=parseFloat(pitch.value);
       var spEl=document.getElementById('frSpeed');
-      if(!isNaN(p)&&p>0){var v=st.fr*p;spEl.textContent='最快扫描速度: '+Math.round(v*100)/100+' mm/s（'+((v/1000).toFixed(3))+' m/s）'}else{spEl.textContent=''}
+      if(!isNaN(p)&&p>0){var v=st.fr*p;spEl.textContent='最快扫描速度: '+Math.round(v*100)/100+' mm/s'}else{spEl.textContent=''}
       res.style.display='block';
     }
     function pickMaxWidth(){
@@ -800,6 +817,9 @@
       })
       .catch(function(e){list.innerHTML='<div class="warning-badge">⚠️ 加载失败: '+e.message+'</div>'});
   }
+  document.getElementById('fabUpload').addEventListener('click',function(){document.getElementById('uploadModalOverlay').classList.add('show')});
+  document.getElementById('uploadModalClose').addEventListener('click',function(){document.getElementById('uploadModalOverlay').classList.remove('show')});
+  document.getElementById('uploadModalOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show')});
   document.getElementById('adminCheckBtn').addEventListener('click',function(){
     if(document.getElementById('adminKey').value==='HKJQR666'){document.getElementById('uploadArea').style.display='block';document.getElementById('uploadMsg').textContent='✅ 验证通过，可上传文档'}
     else{document.getElementById('uploadArea').style.display='none';alert('暗号错误')}
@@ -816,9 +836,9 @@
     reader.onload=function(){
       var base64=reader.result.split(',')[1];
       var path=DOCS_PATH+'/'+file.name;
-      fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+path,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json'},body:JSON.stringify({message:'上传文档: '+file.name,content:base64})})
+      fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+path,{method:'PUT',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({message:'上传文档: '+file.name,content:base64})})
         .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d}})})
-        .then(function(res){if(res.ok){msg.textContent='✅ 上传成功: '+file.name;loadDocs()}else{msg.textContent='❌ 上传失败: '+(res.d.message||'未知错误')}})
+        .then(function(res){if(res.ok){msg.textContent='✅ 上传成功: '+file.name;loadDocs()}else{msg.textContent='❌ 上传失败: '+(res.d.message||'未知错误')+'（请确认 PAT 有 repo/Contents 写权限，且仓库为 zhangsansansang/Selection-Tool）'}})
         .catch(function(e){msg.textContent='❌ 上传失败: '+e.message});
     };
     reader.readAsDataURL(file);

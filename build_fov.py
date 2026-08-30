@@ -25,7 +25,9 @@ for r in range(3, ws.max_row + 1):
         continue
     def g(c):
         v = ws.cell(r, c).value
-        return v if isinstance(v, (int, float)) else None
+        if isinstance(v, (int, float)):
+            return round(float(v), 3)  # 去浮点误差(如 80.00000000000001)
+        return None
     m = {
         'model': name,
         'points': g(2),        # 单轮廓点数
