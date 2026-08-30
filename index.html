@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.5,user-scalable=yes">
-  <title>海康机器人 · 3D轮廓仪选型 | V1.0</title>
+  <title>海康机器人 · 3D轮廓仪选型 | V2.0</title>
+  <script src="data/frame_rate.js"></script>
+  <script src="data/fov.js"></script>
+  <script src="data/downloads.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{background:#f0f2f5;font-family:'Nunito','Segoe UI','Poppins',system-ui,sans-serif;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:1.2rem;color:#1a2632}
@@ -67,14 +70,52 @@
       .comp-compare-box .vs-col{width:100%}
       .comp-compare-box .vs-divider::after{content:"↓"}
     }
+    .page-container{flex:1;display:flex;flex-direction:column}
+    .page{display:none;padding:1.5rem 1.8rem;flex-direction:column;gap:1.2rem}
+    .page.active{display:flex}
+    .page-title{font-weight:800;font-size:1.05rem;color:#1f2c38;border-left:4px solid #f76504;padding-left:.7rem;margin-bottom:.2rem}
+    .page-sub{font-size:.72rem;color:#8f9eae;margin-bottom:.6rem}
+    .bottom-nav{display:flex;justify-content:space-around;align-items:stretch;padding:.5rem .8rem;border-top:1px solid #eef2f6;background:#fff;position:sticky;bottom:0;z-index:20}
+    .nav-item{background:transparent;border:none;cursor:pointer;font-size:.68rem;font-weight:700;color:#5d6f7e;padding:.4rem .6rem;border-radius:18px;display:flex;flex-direction:column;align-items:center;gap:.15rem;transition:background .15s,color .15s;font-family:inherit}
+    .nav-item .nav-ico{font-size:1.15rem}
+    .nav-item.active{background:#fef3e8;color:#f76504}
+    .modal-overlay{position:fixed;inset:0;background:rgba(31,44,56,0.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100;padding:1rem}
+    .modal-overlay.show{display:flex}
+    .modal{background:#fff;border-radius:28px;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;padding:1.3rem 1.5rem;box-shadow:0 20px 40px rgba(0,0,0,0.2);animation:fadeIn .2s ease-out}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem;border-left:4px solid #f76504;padding-left:.7rem}
+    .modal-title{font-weight:800;font-size:.98rem;color:#1f2c38}
+    .modal-close{background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:#8f9eae;padding:.1rem .5rem;border-radius:10px;line-height:1}
+    .modal-close:hover{background:#f2f5f8}
+    .spec-table{width:100%;border-collapse:collapse;font-size:.72rem}
+    .spec-table td{padding:.45rem .55rem;border-bottom:1px solid #eef2f6;vertical-align:top}
+    .spec-table td:first-child{color:#8f9eae;font-weight:700;width:42%;white-space:nowrap}
+    .spec-table td:last-child{color:#1f2c38;font-weight:600}
+    .detail-actions{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap}
+    .detail-actions a{flex:1;min-width:150px;text-align:center;text-decoration:none}
+    .form-section{margin-bottom:1rem}
+    .fr-result{background:#fef3e8;border:1px solid #f76504;border-radius:16px;padding:.9rem 1rem;text-align:center;margin-top:.9rem}
+    .fr-result .big{font-size:1.7rem;font-weight:800;color:#f76504;display:block}
+    .fr-result .lbl{font-size:.68rem;color:#8f9eae}
+    .doc-item{display:flex;justify-content:space-between;align-items:center;padding:.65rem .85rem;border:1px solid #eef2f6;border-radius:14px;margin-bottom:.5rem;background:#fcfdfe;gap:.6rem}
+    .doc-item .doc-name{font-size:.78rem;font-weight:700;color:#1f2c38;word-break:break-all}
+    .doc-item a{font-size:.72rem;color:#f76504;text-decoration:none;font-weight:700;white-space:nowrap}
+    .angle-img{width:100%;border-radius:16px;border:1px solid #eef2f6;margin-bottom:1rem;background:#fff}
+    .hint{font-size:.68rem;color:#8f9eae;margin-top:.4rem;line-height:1.5}
+    .seg{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem}
+    .seg button{flex:1;min-width:80px;background:transparent;border:1.5px solid #e2e8f0;border-radius:20px;padding:.5rem .6rem;font-size:.72rem;font-weight:700;color:#5d6f7e;cursor:pointer;transition:all .15s;font-family:inherit}
+    .seg button.on{background:#fef3e8;border-color:#f76504;color:#f76504}
+    .upload-box{border:1.5px dashed #e2e8f0;border-radius:16px;padding:1rem;text-align:center;margin-top:.5rem}
+    .upload-box input[type=file]{margin:.6rem auto;font-size:.7rem;color:#5d6f7e}
   </style>
 </head>
 <body>
 <div class="app-window">
   <div class="titlebar">
-    <div class="logo-area"><h1>📐 Hikrobot 3D轮廓仪选型 <span class="badge">V1.0</span></h1></div>
+    <div class="logo-area"><h1>📐 Hikrobot 3D轮廓仪选型 <span class="badge">V2.0</span></h1></div>
     <div class="status-badge">✨ 计算选型仅供参考，建议选型后实测</div>
   </div>
+  <div class="page-container">
+  <div class="page active" id="page-home">
   <div class="main-content">
     <div class="left-panel">
       <div class="card">
@@ -99,6 +140,75 @@
     <div class="right-panel" id="rightPanel">
       <div class="card"><div class="card-header">🏆 选型结果</div><div id="resultArea" class="empty-state">等待输入参数或竞品对标查询...</div></div>
     </div>
+  </div>
+  </div>
+  <div class="page" id="page-framerate">
+    <div class="page-title">⚡ 帧率计算</div>
+    <div class="page-sub">选择型号 → 景深(高度范围) → 视野宽度(宽度范围)，查询最高帧率</div>
+    <div class="card">
+      <div class="form-section"><label>相机型号</label><select id="frModel"></select></div>
+      <div class="form-section"><label>景深 / Z测量范围 (高度范围 mm)</label><select id="frDepth"><option value="">-- 先选型号 --</option></select></div>
+      <div class="form-section"><label>视野宽度 (宽度范围 mm，默认最大视野)</label><select id="frWidth"><option value="">-- 先选景深 --</option></select></div>
+      <div class="form-section"><label>采样间距 (mm)</label><input type="number" id="frPitch" placeholder="如 0.01" step="0.001"></div>
+      <div class="fr-result" id="frResult" style="display:none"><span class="lbl">最高帧率</span><span class="big" id="frValue">--</span><span class="lbl" id="frNote"></span><span class="big" id="frSpeed" style="font-size:1.05rem;display:block;margin-top:.4rem"></span></div>
+    </div>
+  </div>
+  <div class="page" id="page-fov">
+    <div class="page-title">📐 视野选型换算</div>
+    <div class="page-sub">输入架设距离 / 视场 / X分辨率 / Z分辨率 之一，换算其余参数</div>
+    <div class="card">
+      <div class="form-section"><label>相机型号</label><select id="fovModel"></select></div>
+      <div class="form-section">
+        <label>输入参数</label>
+        <div class="seg" id="fovMode">
+          <button type="button" data-mode="dist" class="on">架设距离</button>
+          <button type="button" data-mode="view">视场范围</button>
+          <button type="button" data-mode="xres">X分辨率</button>
+          <button type="button" data-mode="zres">Z分辨率</button>
+        </div>
+        <input type="number" id="fovInput" placeholder="输入数值" step="0.1">
+      </div>
+      <button class="btn-primary" id="fovCalcBtn">🔄 换算</button>
+      <div id="fovResult" style="margin-top:.8rem"></div>
+    </div>
+  </div>
+  <div class="page" id="page-angle">
+    <div class="page-title">📐 交汇角度查看</div>
+    <div class="page-sub">激光与相机光轴的交汇角度参考</div>
+    <div class="card">
+      <img class="angle-img" src="表格文档/交汇角1.png" alt="交汇角1">
+      <img class="angle-img" src="表格文档/交汇角2.png" alt="交汇角2">
+    </div>
+  </div>
+  <div class="page" id="page-docs">
+    <div class="page-title">📄 经验文档</div>
+    <div class="page-sub">查看经验文档，或输入管理员暗号上传新文件（word/ppt/pdf）</div>
+    <div class="card">
+      <div class="card-header" style="border-left:none;padding-left:0">📚 文档列表</div>
+      <div id="docList" class="empty-state">加载中...</div>
+    </div>
+    <div class="card">
+      <div class="card-header" style="border-left:none;padding-left:0">📤 上传文档（管理员）</div>
+      <div class="form-section"><label>管理员暗号</label><input type="password" id="adminKey" placeholder="请输入暗号"><button class="btn-outline" id="adminCheckBtn">🔑 验证暗号</button></div>
+      <div id="uploadArea" style="display:none">
+        <div class="form-section"><label>GitHub Token (PAT)</label><input type="password" id="ghToken" placeholder="首次填写后自动记住"><div class="hint">PAT 是 GitHub 访问令牌，用于授权上传。生成方法：GitHub → 右上角头像 → Settings → Developer settings → Personal access tokens → Generate new token，勾选 <strong>repo</strong> 权限。首次上传填一次后会保存在本机浏览器，之后直接上传即可。</div></div>
+        <div class="upload-box"><input type="file" id="docFile"><button class="btn-primary" id="uploadBtn">⬆️ 上传到 GitHub</button><div class="hint" id="uploadMsg"></div></div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="bottom-nav">
+    <button type="button" class="nav-item active" data-page="page-home"><span class="nav-ico">🏠</span>主页</button>
+    <button type="button" class="nav-item" data-page="page-framerate"><span class="nav-ico">⚡</span>帧率计算</button>
+    <button type="button" class="nav-item" data-page="page-fov"><span class="nav-ico">📐</span>视野换算</button>
+    <button type="button" class="nav-item" data-page="page-angle"><span class="nav-ico">📐</span>交汇角度</button>
+    <button type="button" class="nav-item" data-page="page-docs"><span class="nav-ico">📄</span>经验文档</button>
+  </div>
+</div>
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="modalTitle">型号详情</div><button type="button" class="modal-close" id="modalClose">×</button></div>
+    <div id="modalBody"></div>
   </div>
 </div>
 <script>
@@ -467,6 +577,7 @@
         } else {
           h+='<div class="vs-hik-model">'+c.hikModel+'</div><div class="vs-specs">X轴视野: '+(hp.xFar||'-')+'mm | Z景深: '+(hp.zRange||'-')+'mm<br>扫描帧率: '+(hp.maxFreq||'-')+'KHz | Z分辨率: '+(hp.zRes||'-')+'<br>Z重复精度(估算): '+(hp.zRepeatDisplay||'-')+' μm | 激光波长: '+(hp.light||'-')+'</div>';
         }
+        if(c.hikModel&&c.hikModel!==''&&(c.hikSeries||'')!=='NotLineLaser'){h+='<span class="tag" data-model="'+c.hikModel+'" style="cursor:pointer;margin-top:.4rem;display:inline-block">📋 查看海康型号详情</span>'}
         h+='</div></div></div>';
       });
     }else{h='<div class="warning-badge" style="margin:1rem;">⚠️ 未匹配到型号'+(bh?' (品牌: '+bh+')':' (已搜索全部品牌)')+'</div>'}
@@ -518,7 +629,7 @@
         else if(m.series==='DP4000')serTag='<span class="tag series purple">DP4000 更高精度</span>';
         var stitchHTML='';
         if(!xOk){var n=Math.ceil(ps/m.xFar);stitchHTML='<div class="stitch-info">📌 拼接: '+n+'台 '+m.model+' | X轴 '+m.xFar+'mm × '+n+' = '+m.xFar*n+'mm ≥ '+ps+'mm | 单台zRepeat@'+ps+'mm: '+zz.display+' μm</div>'}
-        h+='<div class="rec-card'+(i<2?' top':'')+'"><div class="rank">#'+(i+1)+'</div><div class="info"><div class="name">'+m.model+' '+serTag+' '+tags.join('')+'</div>';
+        h+='<div class="rec-card'+(i<2?' top':'')+'" data-model="'+m.model+'" title="点击查看详细参数" style="cursor:pointer"><div class="rank">#'+(i+1)+'</div><div class="info"><div class="name">'+m.model+' '+serTag+' '+tags.join('')+'</div>';
         h+='<div class="specs">z重复精度@'+ps+'mm: <strong>'+zz.display+' μm</strong> (全量程: '+m.zRepeatDisplay+' μm) | X轴: '+m.xNear+'~'+m.xFar+'mm | Z景深: '+m.zRange+'mm | '+m.light+' | '+m.maxFreq+'KHz</div>';
         h+=stitchHTML+'</div></div>';
       });
@@ -540,6 +651,177 @@
     var cm=document.getElementById('competitorModel').value.trim();
     if(!cm){document.getElementById('resultArea').innerHTML='<div class="warning-badge">⚠️ 请输入友商型号</div>';return}
     showCompResult(fc(cb,cm),cb);
+  });
+
+  /* ============ 页面切换 ============ */
+  function switchPage(id){
+    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+    var pg=document.getElementById(id);if(pg)pg.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(function(n){n.classList.toggle('active',n.getAttribute('data-page')===id)});
+    if(id==='page-framerate'&&!window.__frInit){window.__frInit=true;initFrameRate()}
+    if(id==='page-fov'&&!window.__fovInit){window.__fovInit=true;initFov()}
+    if(id==='page-docs'&&!window.__docsInit){window.__docsInit=true;loadDocs()}
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('.nav-item').forEach(function(n){n.addEventListener('click',function(){switchPage(n.getAttribute('data-page'))})});
+
+  /* ============ 详情弹窗 ============ */
+  function openDetail(model){
+    var m=PH[model];if(!m){alert('未找到型号 '+model+' 的参数');return}
+    document.getElementById('modalTitle').textContent=model;
+    var rows=[
+      ['型号',m.model],['系列',m.series],['单轮廓点数',m.points||'-'],
+      ['参考距离 CD',(m.cd!=null?m.cd+' mm':'-')],
+      ['X轴视野(近/参考/远)',(m.xNear||'-')+' / '+(m.xRef||'-')+' / '+(m.xFar||'-')+' mm'],
+      ['Z轴测量范围',(m.zRange!=null?m.zRange+' mm':'-')],
+      ['Z轴分辨率',m.zRes||'-'],['Z轴重复精度',(m.zRepeatDisplay!=null?m.zRepeatDisplay+' μm':'-')],
+      ['最高帧率',(m.maxFreq!=null?m.maxFreq+' kHz':'-')],['光源',m.light||'-'],
+      ['类别/备注',(m.category||'-')+(m.note?' / '+m.note:'')]
+    ];
+    var t='<table class="spec-table">'+rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'}).join('')+'</table>';
+    var detailUrl=(window.DOWNLOAD_MAP&&window.DOWNLOAD_MAP[model])||window.DOWNLOAD_FALLBACK;
+    t+='<div class="detail-actions"><a class="btn-primary" href="'+detailUrl+'" target="_blank">📄 官网详情 / 下载彩页图纸</a></div>';
+    t+='<div class="hint">若详情页未直接提供下载，请在产品列表页查找该型号的彩页与结构图纸。</div>';
+    document.getElementById('modalBody').innerHTML=t;
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+  document.getElementById('modalClose').addEventListener('click',function(){document.getElementById('modalOverlay').classList.remove('show')});
+  document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show')});
+  document.getElementById('resultArea').addEventListener('click',function(e){
+    var el=e.target.closest?e.target.closest('[data-model]'):null;if(!el)return;
+    openDetail(el.getAttribute('data-model'));
+  });
+
+  /* ============ 帧率计算 ============ */
+  function initFrameRate(){
+    if(!window.FRAME_DATA)return;
+    var sel=document.getElementById('frModel');
+    var dp=document.getElementById('frDepth'),wp=document.getElementById('frWidth');
+    var res=document.getElementById('frResult'),pitch=document.getElementById('frPitch');
+    var st={model:null,m:null,s:null,roiH:null,roiW:null,fr:null};
+    function calcFr(){
+      st.fr=null;
+      if(st.roiH!=null&&st.roiW!=null&&st.s){st.s.rows.forEach(function(r){if(r[0]===st.roiH&&r[1]===st.roiW)st.fr=r[2]})}
+    }
+    function render(){
+      if(st.fr==null){res.style.display='none';return}
+      document.getElementById('frValue').textContent=Math.round(st.fr)+' Hz';
+      var depth=(st.m.zRange*st.roiH/st.s.totalH).toFixed(2);
+      var width=(st.m.mid*st.roiW/st.s.totalW).toFixed(2);
+      document.getElementById('frNote').textContent=st.model+' | 景深 '+depth+'mm | 视野宽度 '+width+'mm';
+      var p=parseFloat(pitch.value);
+      var spEl=document.getElementById('frSpeed');
+      if(!isNaN(p)&&p>0){var v=st.fr*p;spEl.textContent='最快扫描速度: '+Math.round(v*100)/100+' mm/s（'+((v/1000).toFixed(3))+' m/s）'}else{spEl.textContent=''}
+      res.style.display='block';
+    }
+    function pickMaxWidth(){
+      var opts=wp.options;
+      if(opts.length>1){wp.selectedIndex=opts.length-1;st.roiW=parseInt(opts[opts.length-1].value)}
+      else{st.roiW=null}
+      calcFr();render();
+    }
+    sel.innerHTML='<option value="">-- 请选择型号 --</option>'+window.FRAME_DATA.models.map(function(m){return '<option value="'+m.model+'">'+m.model+'</option>'}).join('');
+    sel.addEventListener('change',function(){
+      var model=this.value;
+      dp.innerHTML='<option value="">-- 先选型号 --</option>';wp.innerHTML='<option value="">-- 先选景深 --</option>';
+      st={model:null,m:null,s:null,roiH:null,roiW:null,fr:null};res.style.display='none';
+      if(!model)return;
+      var m=null;window.FRAME_DATA.models.forEach(function(x){if(x.model===model)m=x});
+      if(!m||!window.FRAME_DATA.series[m.series])return;
+      st.model=model;st.m=m;st.s=window.FRAME_DATA.series[m.series];
+      var roiHs={};st.s.rows.forEach(function(r){roiHs[r[0]]=1});
+      var hs=Object.keys(roiHs).map(Number).sort(function(a,b){return a-b});
+      dp.innerHTML='<option value="">-- 选择景深 --</option>'+hs.map(function(h){return '<option value="'+h+'">'+(m.zRange*h/st.s.totalH).toFixed(2)+' mm</option>'}).join('');
+    });
+    dp.addEventListener('change',function(){
+      var roiH=parseInt(this.value);
+      wp.innerHTML='<option value="">-- 选择视野宽度 --</option>';
+      st.roiH=roiH;st.roiW=null;st.fr=null;res.style.display='none';
+      if(!roiH||!st.s)return;
+      var roiWs={};st.s.rows.forEach(function(r){if(r[0]===roiH)roiWs[r[1]]=1});
+      var ws=Object.keys(roiWs).map(Number).sort(function(a,b){return a-b});
+      wp.innerHTML='<option value="">-- 选择视野宽度 --</option>'+ws.map(function(w){return '<option value="'+w+'">'+(st.m.mid*w/st.s.totalW).toFixed(2)+' mm</option>'}).join('');
+      pickMaxWidth();
+    });
+    wp.addEventListener('change',function(){st.roiW=parseInt(this.value);calcFr();render()});
+    pitch.addEventListener('input',render);
+  }
+
+  /* ============ 视野换算 ============ */
+  function initFov(){
+    if(!window.FOV_DB)return;
+    var sel=document.getElementById('fovModel');
+    var mode='dist';
+    sel.innerHTML='<option value="">-- 请选择型号 --</option>'+window.FOV_DB.map(function(m){return '<option value="'+m.model+'">'+m.model+'</option>'}).join('');
+    document.getElementById('fovMode').addEventListener('click',function(e){
+      var b=e.target.closest?e.target.closest('button'):null;if(!b)return;
+      mode=b.getAttribute('data-mode');
+      document.querySelectorAll('#fovMode button').forEach(function(x){x.classList.toggle('on',x===b)});
+    });
+    document.getElementById('fovCalcBtn').addEventListener('click',function(){
+      var model=sel.value;var val=parseFloat(document.getElementById('fovInput').value);
+      var out=document.getElementById('fovResult');
+      if(!model||isNaN(val)||val<=0){out.innerHTML='<div class="warning-badge">⚠️ 请选择型号并输入有效数值</div>';return}
+      var m=null;window.FOV_DB.forEach(function(x){if(x.model===model)m=x});if(!m)return;
+      var ranges={'dist':{n:'架设距离',min:m.minH,max:m.maxH,u:'mm'},'view':{n:'视场范围',min:m.minView,max:m.maxView,u:'mm'},'xres':{n:'X分辨率',min:m.minX,max:m.maxX,u:'μm'},'zres':{n:'Z分辨率',min:m.minZ,max:m.maxZ,u:'μm'}};
+      var rr=ranges[mode];
+      if(rr&&(val<rr.min||val>rr.max)){out.innerHTML='<div class="warning-badge">⚠️ '+rr.n+'超出范围：该型号 '+rr.n+'需在 <strong>'+rr.min+' ~ '+rr.max+' '+rr.u+'</strong> 之间</div>';return}
+      var dist=null,view=null,xres=null,zres=null;
+      var lerp=function(a,b,t){return a+(b-a)*t};
+      if(mode==='dist'){dist=val;view=lerp(m.near,m.far,(dist-m.minH)/(m.maxH-m.minH))}
+      else if(mode==='view'){view=val;dist=lerp(m.minH,m.maxH,(view-m.near)/(m.far-m.near))}
+      else if(mode==='xres'){xres=val;view=xres/1000*m.points;dist=lerp(m.minH,m.maxH,(view-m.near)/(m.far-m.near))}
+      else if(mode==='zres'){zres=val;view=lerp(m.minView,m.maxView,(zres-m.minZ)/(m.maxZ-m.minZ));dist=lerp(m.minH,m.maxH,(view-m.near)/(m.far-m.near))}
+      if(dist==null)dist=lerp(m.minH,m.maxH,(view-m.near)/(m.far-m.near));
+      if(view==null)view=lerp(m.near,m.far,(dist-m.minH)/(m.maxH-m.minH));
+      if(xres==null)xres=view/m.points*1000;
+      if(zres==null)zres=lerp(m.minZ,m.maxZ,(view-m.minView)/(m.maxView-m.minView));
+      out.innerHTML='<table class="spec-table"><tr><td>架设距离</td><td>'+dist.toFixed(2)+' mm</td></tr><tr><td>实际视场</td><td>'+view.toFixed(2)+' mm</td></tr><tr><td>X分辨率</td><td>'+xres.toFixed(2)+' μm</td></tr><tr><td>Z分辨率</td><td>'+zres.toFixed(2)+' μm</td></tr><tr><td>参考距离</td><td>'+m.cd+' mm</td></tr><tr><td>Z测量范围</td><td>'+m.zRange+' mm</td></tr></table>';
+    });
+  }
+
+  /* ============ 经验文档 ============ */
+  var GH_REPO='zhangsansansang/Selection-Tool',DOCS_PATH='docs';
+  try{var _savedPat=localStorage.getItem('gh_pat');if(_savedPat)document.getElementById('ghToken').value=_savedPat}catch(e){}
+  function loadDocs(){
+    var list=document.getElementById('docList');
+    fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+DOCS_PATH)
+      .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
+      .then(function(data){
+        if(!Array.isArray(data)){list.innerHTML='<div class="empty-state">docs 目录为空</div>';return}
+        var h='';
+        data.forEach(function(f){
+          if(f.type!=='file')return;
+          var ext=(f.name.split('.').pop()||'').toLowerCase();
+          if(['doc','docx','ppt','pptx','pdf','xls','xlsx','txt','md'].indexOf(ext)<0)return;
+          h+='<div class="doc-item"><div class="doc-name">'+f.name+'</div><a href="'+f.download_url+'" target="_blank">查看/下载</a></div>';
+        });
+        list.innerHTML=h||'<div class="empty-state">暂无文档</div>';
+      })
+      .catch(function(e){list.innerHTML='<div class="warning-badge">⚠️ 加载失败: '+e.message+'</div>'});
+  }
+  document.getElementById('adminCheckBtn').addEventListener('click',function(){
+    if(document.getElementById('adminKey').value==='HKJQR666'){document.getElementById('uploadArea').style.display='block';document.getElementById('uploadMsg').textContent='✅ 验证通过，可上传文档'}
+    else{document.getElementById('uploadArea').style.display='none';alert('暗号错误')}
+  });
+  document.getElementById('uploadBtn').addEventListener('click',function(){
+    var token=document.getElementById('ghToken').value.trim();
+    var file=document.getElementById('docFile').files[0];
+    var msg=document.getElementById('uploadMsg');
+    if(!token){msg.textContent='❌ 请输入 GitHub Token';return}
+    try{localStorage.setItem('gh_pat',token)}catch(e){}
+    if(!file){msg.textContent='❌ 请选择文件';return}
+    if(file.size>1000000){msg.textContent='❌ 文件超过 1MB（GitHub API 限制），请用 Git 直接提交大文件';return}
+    var reader=new FileReader();
+    reader.onload=function(){
+      var base64=reader.result.split(',')[1];
+      var path=DOCS_PATH+'/'+file.name;
+      fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+path,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json'},body:JSON.stringify({message:'上传文档: '+file.name,content:base64})})
+        .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d}})})
+        .then(function(res){if(res.ok){msg.textContent='✅ 上传成功: '+file.name;loadDocs()}else{msg.textContent='❌ 上传失败: '+(res.d.message||'未知错误')}})
+        .catch(function(e){msg.textContent='❌ 上传失败: '+e.message});
+    };
+    reader.readAsDataURL(file);
   });
 })();
 </script>

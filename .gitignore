@@ -7,6 +7,10 @@ gen_all_comp.py
 *.pdf
 *.xlsx
 *.rar
+# 经验文档目录：允许 PDF（种子文档/上传文档）
+!docs/*.pdf
+# Excel 锁文件
+~$*
 comp_db_new.txt
 extracted_data.txt
 all_comp_entries.txt
