@@ -99,6 +99,8 @@
     .doc-item{display:flex;justify-content:space-between;align-items:center;padding:.65rem .85rem;border:1px solid #eef2f6;border-radius:14px;margin-bottom:.5rem;background:#fcfdfe;gap:.6rem}
     .doc-item .doc-name{font-size:.78rem;font-weight:700;color:#1f2c38;word-break:break-all}
     .doc-item a{font-size:.72rem;color:#f76504;text-decoration:none;font-weight:700;white-space:nowrap}
+    .doc-del{background:#ffebee;color:#c62828;border:1px solid #ef9a9a;border-radius:14px;padding:.25rem .6rem;font-size:.68rem;font-weight:700;cursor:pointer;white-space:nowrap}
+    .doc-del:hover{background:#ffcdd2}
     .angle-img{width:100%;border-radius:16px;border:1px solid #eef2f6;margin-bottom:1rem;background:#fff}
     .hint{font-size:.68rem;color:#8f9eae;margin-top:.4rem;line-height:1.5}
     .seg{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem}
@@ -807,7 +809,17 @@
 
   /* ============ 经验文档 ============ */
   var GH_REPO='zhangsansansang/Selection-Tool',DOCS_PATH='docs';
+  var __admin=false;
   try{var _savedPat=localStorage.getItem('gh_pat');if(_savedPat)document.getElementById('ghToken').value=_savedPat}catch(e){}
+  function deleteDoc(path,sha,name){
+    if(!confirm('确定删除「'+name+'」吗？'))return;
+    var token=document.getElementById('ghToken').value.trim();
+    if(!token){alert('请先在「＋」弹窗输入 GitHub Token');return}
+    fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+path,{method:'DELETE',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({message:'删除文档: '+name,sha:sha})})
+      .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d}})})
+      .then(function(res){if(res.ok){alert('✅ 删除成功');loadDocs()}else{alert('❌ 删除失败: '+(res.d.message||'未知错误'))}})
+      .catch(function(e){alert('❌ 删除失败: '+e.message)});
+  }
   function loadDocs(){
     var list=document.getElementById('docList');
     fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+DOCS_PATH+'?t='+Date.now())
@@ -817,11 +829,11 @@
         var h='';
         data.forEach(function(f){
           if(f.type!=='file')return;
-          var ext=(f.name.split('.').pop()||'').toLowerCase();
-          if(['doc','docx','ppt','pptx','pdf','xls','xlsx','txt','md'].indexOf(ext)<0)return;
-          h+='<div class="doc-item"><div class="doc-name">'+f.name+'</div><a href="'+f.download_url+'" target="_blank">查看/下载</a></div>';
+          var del=__admin?('<button type="button" class="doc-del" data-path="'+f.path+'" data-sha="'+f.sha+'" data-name="'+f.name+'">🗑 删除</button>'):'';
+          h+='<div class="doc-item"><div class="doc-name">'+f.name+'</div><div style="display:flex;gap:.5rem;align-items:center"><a href="'+f.download_url+'" target="_blank">查看/下载</a>'+del+'</div></div>';
         });
         list.innerHTML=h||'<div class="empty-state">暂无文档</div>';
+        list.querySelectorAll('.doc-del').forEach(function(b){b.addEventListener('click',function(){deleteDoc(b.getAttribute('data-path'),b.getAttribute('data-sha'),b.getAttribute('data-name'))})});
       })
       .catch(function(e){list.innerHTML='<div class="warning-badge">⚠️ 加载失败: '+e.message+'</div>'});
   }
@@ -829,7 +841,7 @@
   document.getElementById('uploadModalClose').addEventListener('click',function(){document.getElementById('uploadModalOverlay').classList.remove('show')});
   document.getElementById('uploadModalOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show')});
   document.getElementById('adminCheckBtn').addEventListener('click',function(){
-    if(document.getElementById('adminKey').value==='HKJQR666'){document.getElementById('uploadArea').style.display='block';document.getElementById('uploadMsg').textContent='✅ 验证通过，可上传文档'}
+    if(document.getElementById('adminKey').value==='HKJQR666'){__admin=true;document.getElementById('uploadArea').style.display='block';document.getElementById('uploadMsg').textContent='✅ 验证通过，可上传/删除文档';loadDocs()}
     else{document.getElementById('uploadArea').style.display='none';alert('暗号错误')}
   });
   document.getElementById('uploadBtn').addEventListener('click',function(){
