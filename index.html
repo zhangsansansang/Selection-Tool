@@ -856,9 +856,16 @@
     reader.onload=function(){
       var base64=reader.result.split(',')[1];
       var path=DOCS_PATH+'/'+file.name;
-      fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+path,{method:'PUT',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({message:'上传文档: '+file.name,content:base64})})
+      // 先查文件是否已存在(拿 sha), 已存在则覆盖需带 sha
+      fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+path,{headers:{'Authorization':'Bearer '+token}})
         .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d}})})
-        .then(function(res){if(res.ok){msg.textContent='✅ 上传成功: '+file.name;loadDocs()}else{msg.textContent='❌ 上传失败: '+(res.d.message||'未知错误')+'（请确认 PAT 有 repo/Contents 写权限，且仓库为 zhangsansansang/Selection-Tool）'}})
+        .then(function(res){
+          var body={message:'上传文档: '+file.name,content:base64};
+          if(res.ok&&res.d.sha)body.sha=res.d.sha;
+          return fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+path,{method:'PUT',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(body)});
+        })
+        .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d}})})
+        .then(function(res){if(res.ok){msg.textContent='✅ 上传成功: '+file.name;loadDocs()}else{msg.textContent='❌ 上传失败: '+(res.d.message||'未知错误')}})
         .catch(function(e){msg.textContent='❌ 上传失败: '+e.message});
     };
     reader.readAsDataURL(file);
