@@ -186,9 +186,12 @@
     </div>
   </div>
   <div class="page" id="page-angle">
-    <div class="page-title">📐 交汇角度查看</div>
-    <div class="page-sub">激光与相机光轴的交汇角度参考</div>
-    <div class="card">
+    <div class="page-title">🔒 交汇角度查看</div>
+    <div class="page-sub">管理员专属，需输入密钥查看</div>
+    <div class="card" id="angleGate">
+      <div class="form-section"><label>管理员密钥</label><input type="password" id="angleKey" placeholder="请输入密钥"><button class="btn-outline" id="angleCheckBtn">🔑 验证</button></div>
+    </div>
+    <div class="card" id="angleContent" style="display:none">
       <img class="angle-img" src="表格文档/交汇角1.png" alt="交汇角1">
       <img class="angle-img" src="表格文档/交汇角2.png" alt="交汇角2">
     </div>
@@ -206,8 +209,8 @@
     <button type="button" class="nav-item active" data-page="page-home"><span class="nav-ico">🏠</span>主页</button>
     <button type="button" class="nav-item" data-page="page-framerate"><span class="nav-ico">⚡</span>帧率计算</button>
     <button type="button" class="nav-item" data-page="page-fov"><span class="nav-ico">📐</span>视野换算</button>
-    <button type="button" class="nav-item" data-page="page-angle"><span class="nav-ico">📐</span>交汇角度</button>
     <button type="button" class="nav-item" data-page="page-docs"><span class="nav-ico">📄</span>经验文档</button>
+    <button type="button" class="nav-item" data-page="page-angle"><span class="nav-ico">🔒</span>交汇角度</button>
   </div>
 </div>
 <div class="modal-overlay" id="modalOverlay">
@@ -216,7 +219,7 @@
     <div id="modalBody"></div>
   </div>
 </div>
-<button type="button" class="fab" id="fabUpload" title="上传文档">＋</button>
+<button type="button" class="fab" id="fabUpload" title="上传文档" style="display:none">＋</button>
 <div class="modal-overlay" id="uploadModalOverlay">
   <div class="modal">
     <div class="modal-header"><div class="modal-title">📤 上传文档（管理员）</div><button type="button" class="modal-close" id="uploadModalClose">×</button></div>
@@ -677,6 +680,7 @@
     if(id==='page-framerate'&&!window.__frInit){window.__frInit=true;initFrameRate()}
     if(id==='page-fov'&&!window.__fovInit){window.__fovInit=true;initFov()}
     if(id==='page-docs'&&!window.__docsInit){window.__docsInit=true;loadDocs()}
+    var fab=document.getElementById('fabUpload');if(fab)fab.style.display=(id==='page-docs')?'flex':'none';
     window.scrollTo(0,0);
   }
   document.querySelectorAll('.nav-item').forEach(function(n){n.addEventListener('click',function(){switchPage(n.getAttribute('data-page'))})});
@@ -707,6 +711,10 @@
   document.getElementById('resultArea').addEventListener('click',function(e){
     var el=e.target.closest?e.target.closest('[data-model]'):null;if(!el)return;
     openDetail(el.getAttribute('data-model'));
+  });
+  document.getElementById('angleCheckBtn').addEventListener('click',function(){
+    if(document.getElementById('angleKey').value==='HKJQR666'){document.getElementById('angleGate').style.display='none';document.getElementById('angleContent').style.display='block'}
+    else{alert('密钥错误')}
   });
 
   /* ============ 帧率计算 ============ */
@@ -802,7 +810,7 @@
   try{var _savedPat=localStorage.getItem('gh_pat');if(_savedPat)document.getElementById('ghToken').value=_savedPat}catch(e){}
   function loadDocs(){
     var list=document.getElementById('docList');
-    fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+DOCS_PATH)
+    fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+DOCS_PATH+'?t='+Date.now())
       .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
       .then(function(data){
         if(!Array.isArray(data)){list.innerHTML='<div class="empty-state">docs 目录为空</div>';return}
