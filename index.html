@@ -830,9 +830,10 @@
         data.forEach(function(f){
           if(f.type!=='file')return;
           var del=__admin?('<button type="button" class="doc-del" data-path="'+f.path+'" data-sha="'+f.sha+'" data-name="'+f.name+'">🗑 删除</button>'):'';
-          h+='<div class="doc-item"><div class="doc-name">'+f.name+'</div><div style="display:flex;gap:.5rem;align-items:center"><a href="'+f.download_url+'" target="_blank">查看/下载</a>'+del+'</div></div>';
+          h+='<div class="doc-item"><div class="doc-name">'+f.name+'</div><div style="display:flex;gap:.5rem;align-items:center"><a href="'+f.download_url+'" class="doc-view">查看/下载</a>'+del+'</div></div>';
         });
         list.innerHTML=h||'<div class="empty-state">暂无文档</div>';
+        list.querySelectorAll('.doc-view').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var w=window.open(a.href,'_blank');if(!w)window.location.href=a.href;})});
         list.querySelectorAll('.doc-del').forEach(function(b){b.addEventListener('click',function(){deleteDoc(b.getAttribute('data-path'),b.getAttribute('data-sha'),b.getAttribute('data-name'))})});
       })
       .catch(function(e){list.innerHTML='<div class="warning-badge">⚠️ 加载失败: '+e.message+'</div>'});
